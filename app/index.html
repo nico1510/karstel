@@ -36,6 +36,15 @@
         <h1>Hallo Jannic</h1>
         <p class="lead">Hier entsteht schon bald das erste Projekt</p>
         <p><a class="btn btn-lg btn-success" href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a></p>
+        <p></p><button id="start-calendar-button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-calendar"></span></button></p>
+        <p></p><button id="end-calendar-button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-calendar"></span></button></p>
+        <div id="calendar-template" class="popover right" role="tooltip" style="display: none">
+          <div class="arrow"></div>
+          <h3 class="popover-title"></h3>
+          <div id="calendar-content" class="popover-content">
+            calendar placeholder
+          </div>
+        </div>
       </div>
 
       <div class="row marketing">
@@ -58,10 +67,10 @@
 
     </div>
 
-
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
