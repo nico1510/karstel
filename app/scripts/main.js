@@ -18,8 +18,9 @@ function generateCalendarHeader(date) {
   var weekDays = moment.weekdaysMin();
   var sunday = weekDays.shift();
   weekDays.push(sunday);
+
   var htmlString = '<thead><tr>';
-  moment.weekdaysMin().forEach(function (dayName) {
+  weekDays.forEach(function (dayName) {
     htmlString += '<td>' + dayName + '</td>';
   });
   htmlString += '</tr></thead>';
