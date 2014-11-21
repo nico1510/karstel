@@ -15,16 +15,18 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
   })();
 
   function showCalendar(ev) {
-    $('#' + id).css({
+    var calendar = $('#' + id);
+    calendar.css({
       position: 'absolute',
       left: trigger.offset().left + trigger.outerWidth() + 'px',
       top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * $('#' + id).outerHeight()) + 'px',
       display : 'block'
     });
+    calendar.focus();
   }
 
   function hideCalendar(ev) {
-      $('#' + id).css('display', 'none');
+      $(this).css('display', 'none');
   }
 
   function generateCalendarCells(date) {
@@ -48,7 +50,7 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
       for (var d = moment(w.startOf('isoWeek')); d <= w.endOf('isoWeek'); d.add(1, 'days')) {
         cell = $('<td></td>').html(d.format('DD'));
         cell.hover(hoverIn,hoverOut);
-        cell.mousedown(onDaySelect(moment(d)));
+        cell.click(onDaySelect(moment(d)));
         trow.append(cell);
       }
       tbody.append(trow);
@@ -69,9 +71,8 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
 
     return tableHeader;
   }
-
+  $('#' + id).blur(hideCalendar);
   trigger.click(showCalendar);
-  trigger.blur(hideCalendar);
 }
 
 var startCal = new KarstelCalendar($('#start-calendar-button'), 'start-calendar-content', 'Anreisedatum', function onDaySelect(d) {
