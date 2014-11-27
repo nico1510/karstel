@@ -34,7 +34,16 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
   // this handler function is invoked when the calendar looses focus (e.g. a click on another component other than
   // the calendar. Display 'none' makes the calendar invisible
   function hideCalendar(ev) {
-      $(this).css('display', 'none');
+    // this (the use of setTimeout) is an ugly hack but it's not possible any other way...
+    setTimeout(function() {
+      var target = document.activeElement;
+      var calendar = $('#' + id);
+      if (target !== null) {
+        if (calendar.get(0) !== target && calendar.has(target).length === 0) {
+          calendar.css('display', 'none');
+        }
+      }
+    }, 1);
   }
 
   // generate the cells of a calendar (the individual days) based on a specific date
@@ -98,7 +107,7 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
     return tableHeader;
   }
   // $('#' + id) stands for the calendar content. When the content looses focus invoke the hideCalendar handler which is defined above
-  $('#' + id).blur(hideCalendar);
+  $('#' + id).focusout(hideCalendar);
 
   // trigger stands for the calendar-button. Register the showCalendar event handler with the click event of this button
   trigger.click(showCalendar);
@@ -113,5 +122,3 @@ var startCal = new KarstelCalendar($('#start-calendar-button'), 'start-calendar-
 var endCal = new KarstelCalendar($('#end-calendar-button'), 'end-calendar-content', 'Abreisedatum', function onDaySelect(d) {
   console.log(d.format('LLLL'));
 });
-
-
