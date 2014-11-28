@@ -58,13 +58,6 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
     var hoverOut = function () {
       $(this).css('background-color', '#FFFFFF');
     };
-    // helper function which takes a date as input and returns an anonymous function which executes the
-    // daySelectCallback-handler with this date as soon as it is invoked
-    var onDaySelect = function(d) {
-      return function() {
-        daySelectCallback(d);
-      };
-    };
 
     // ++++ actual generation of table cells ++++
     var tbody = $('<tbody></tbody>');
@@ -79,7 +72,7 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
         cell = $('<td></td>').html(d.format('DD'));
         // now assign the handler functions which are defined above to the cell
         cell.hover(hoverIn,hoverOut);
-        cell.click(onDaySelect(moment(d)));
+        cell.click(daySelectCallback.bind(cell, moment(d)));
         trow.append(cell);
       }
       tbody.append(trow);
