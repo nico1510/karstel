@@ -41,25 +41,24 @@
         <div id="calendar-template" tabindex="0" class="popover right" role="tooltip" style="display: none">
           <div class="arrow"></div>
           <h3 class="popover-title"></h3>
-          <div class="dropdown">
+          <div class="dropdown year-dropdown pull-right">
             <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
-              Dropdown
+              <span class="current-year"></span>
               <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" role="menu">
-              <li role="presentation"><a role="menuitem">Action</a></li>
-              <li role="presentation"><a role="menuitem">Another action</a></li>
-              <li role="presentation"><a role="menuitem">Something else here</a></li>
-              <li role="presentation"><a role="menuitem">Separated link</a></li>
-            </ul>
+            <ul class="dropdown-menu" role="menu"></ul>
           </div>
-          <div>
-            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
-              <li role="presentation" class="dropdown-header">Dropdown header</li>
-            </ul>
+          <div class="dropdown month-dropdown pull-left">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="true">
+              <span class="current-month"></span>
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu"></ul>
           </div>
           <div class="calendar-content" class="popover-content">
             <table class="table calendar-table">
+              <thead></thead>
+              <tbody></tbody>
             </table>
           </div>
         </div>

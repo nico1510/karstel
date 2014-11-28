@@ -8,15 +8,60 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
   // todays date and time (initialized as soon as new KarstelCalendar() is created)
   this.date = moment();
 
+  // updates the calendar cells based on the value of this.date
+  var updateCalendar = function () {
+    this.calendar.find('.calendar-content .table tbody').replaceWith(generateCalendarCells(this.date));
+    this.calendar.find('.month-dropdown .current-month').html(this.date.format('MMMM'));
+    this.calendar.find('.year-dropdown .current-year').html(this.date.year());
+  }.bind(this);
+
+  var generateMonthDropdown = function() {
+    var monthList = $();
+    moment.months().forEach(function(monthName) {
+      monthList = monthList.add($('<li />', {
+        role : 'presentation'
+      }).append($('<a />', {
+        role : 'menuitem'
+      }).html(monthName).click(function selectMonth() {
+        this.date.month(monthName);
+        updateCalendar();
+      }.bind(this))));
+    }.bind(this));
+
+    return monthList;
+  }.bind(this);
+
+  var generateYearDropdown = function() {
+    var yearList = $();
+    var next4Years = [];
+    [1,2,3,4].forEach(function(yearIncrement) {
+      next4Years.push(moment(this.date).add(yearIncrement, 'years').year());
+    }.bind(this));
+    next4Years.forEach(function(year) {
+      yearList = yearList.add($('<li />', {
+        role : 'presentation'
+      }).append($('<a />', {
+        role : 'menuitem'
+      }).html(year).click(function selectYear() {
+        this.date.year(year);
+        updateCalendar();
+      }.bind(this))));
+    }.bind(this));
+    return yearList;
+  }.bind(this);
+
   // create a clone from the html element with id calendar-template with a new id
   // and fill the calendar content table with table header and table body
   // this method is invoked as soon as new KarstelCalendar() is created
   (function init() {
     var clone = $('#calendar-template').clone().attr('id', id);
     clone.find('h3').html(header);
-    clone.find('.calendar-content .table').append(generateCalendarHeader()).append(generateCalendarCells(this.date));
+    clone.find('.month-dropdown ul').append(generateMonthDropdown());
+    clone.find('.year-dropdown ul').append(generateYearDropdown());
+    clone.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
     clone.appendTo('body');
     this.calendar = clone;
+    updateCalendar();
   }).bind(this)();
 
   // this handler function is invoked when the calendar-button (trigger) is pressed
@@ -63,8 +108,14 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
     var tbody = $('<tbody></tbody>');
     var trow;
     var cell;
-
-    for (var w = moment(date.startOf('month')); w <= date.endOf('month'); w.add(1, 'weeks')) {
+    var w = moment(date.startOf('month'));
+    var firstWeek = true;
+    while(w < date.endOf('month')) {
+      if(firstWeek) {
+        firstWeek = false;
+      } else {
+        w.add(1, 'weeks');
+      }
       // for every week add a new table row
       trow = $('<tr></tr>');
       for (var d = moment(w.startOf('isoWeek')); d <= w.endOf('isoWeek'); d.add(1, 'days')) {
@@ -95,9 +146,9 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
       tableCell = $('<td></td>').html(dayName);
       tableHeader.find('tr').append(tableCell);
     });
-
     return tableHeader;
   }
+
   // When the calendar looses focus invoke the hideCalendar handler which is defined above
   this.calendar.focusout(hideCalendar);
 
