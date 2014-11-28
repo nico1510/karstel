@@ -6,45 +6,44 @@ moment.locale('de');
 function KarstelCalendar(trigger, id, header, daySelectCallback) {
 
   // todays date and time (initialized as soon as new KarstelCalendar() is created)
-  var date = moment();
+  this.date = moment();
 
   // create a clone from the html element with id calendar-template with a new id
   // and fill the calendar content table with table header and table body
   // this method is invoked as soon as new KarstelCalendar() is created
-  (function create() {
+  (function init() {
     var clone = $('#calendar-template').clone().attr('id', id);
     clone.find('h3').html(header);
-    clone.find('.calendar-content .table').append(generateCalendarHeader()).append(generateCalendarCells(date));
+    clone.find('.calendar-content .table').append(generateCalendarHeader()).append(generateCalendarCells(this.date));
     clone.appendTo('body');
-  })();
+    this.calendar = clone;
+  }).bind(this)();
 
   // this handler function is invoked when the calendar-button (trigger) is pressed
-  function showCalendar(ev) {
-    var calendar = $('#' + id);
+  var showCalendar = function(ev) {
     // change position to absolute and compute the position so that it is next to the calendar-button (trigger)
-    calendar.css({
+    this.calendar.css({
       position: 'absolute',
       left: trigger.offset().left + trigger.outerWidth() + 'px',
-      top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * $('#' + id).outerHeight()) + 'px',
+      top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * this.calendar.outerHeight()) + 'px',
       display : 'block'
     });
-    calendar.focus();
-  }
+    this.calendar.focus();
+  }.bind(this);
 
   // this handler function is invoked when the calendar looses focus (e.g. a click on another component other than
   // the calendar. Display 'none' makes the calendar invisible
-  function hideCalendar(ev) {
+  var hideCalendar = function(ev) {
     // this (the use of setTimeout) is an ugly hack but it's not possible any other way...
     setTimeout(function() {
       var target = document.activeElement;
-      var calendar = $('#' + id);
       if (target !== null) {
-        if (calendar.get(0) !== target && calendar.has(target).length === 0) {
-          calendar.css('display', 'none');
+        if (this.calendar.get(0) !== target && this.calendar.has(target).length === 0) {
+          this.calendar.css('display', 'none');
         }
       }
-    }, 1);
-  }
+    }.bind(this), 1);
+  }.bind(this);
 
   // generate the cells of a calendar (the individual days) based on a specific date
   function generateCalendarCells(date) {
@@ -106,8 +105,8 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
 
     return tableHeader;
   }
-  // $('#' + id) stands for the calendar content. When the content looses focus invoke the hideCalendar handler which is defined above
-  $('#' + id).focusout(hideCalendar);
+  // When the calendar looses focus invoke the hideCalendar handler which is defined above
+  this.calendar.focusout(hideCalendar);
 
   // trigger stands for the calendar-button. Register the showCalendar event handler with the click event of this button
   trigger.click(showCalendar);
