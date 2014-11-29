@@ -6,49 +6,8 @@ moment.locale('de');
 function KarstelCalendar(trigger, id, header, daySelectCallback) {
 
   // todays date and time (initialized as soon as new KarstelCalendar() is created)
-  this.date = moment();
-
-  // updates the calendar cells based on the value of this.date
-  var updateCalendar = function () {
-    this.calendar.find('.calendar-content .table tbody').replaceWith(generateCalendarCells(this.date));
-    this.calendar.find('.month-dropdown .current-month').html(this.date.format('MMMM'));
-    this.calendar.find('.year-dropdown .current-year').html(this.date.year());
-  }.bind(this);
-
-  var generateMonthDropdown = function() {
-    var monthList = $();
-    moment.months().forEach(function(monthName) {
-      monthList = monthList.add($('<li />', {
-        role : 'presentation'
-      }).append($('<a />', {
-        role : 'menuitem'
-      }).html(monthName).click(function selectMonth() {
-        this.date.month(monthName);
-        updateCalendar();
-      }.bind(this))));
-    }.bind(this));
-
-    return monthList;
-  }.bind(this);
-
-  var generateYearDropdown = function() {
-    var yearList = $();
-    var next4Years = [];
-    [1,2,3,4].forEach(function(yearIncrement) {
-      next4Years.push(moment(this.date).add(yearIncrement, 'years').year());
-    }.bind(this));
-    next4Years.forEach(function(year) {
-      yearList = yearList.add($('<li />', {
-        role : 'presentation'
-      }).append($('<a />', {
-        role : 'menuitem'
-      }).html(year).click(function selectYear() {
-        this.date.year(year);
-        updateCalendar();
-      }.bind(this))));
-    }.bind(this));
-    return yearList;
-  }.bind(this);
+  var date = moment();
+  var calendar;
 
   // create a clone from the html element with id calendar-template with a new id
   // and fill the calendar content table with table header and table body
@@ -60,48 +19,90 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
     clone.find('.year-dropdown ul').append(generateYearDropdown());
     clone.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
     clone.appendTo('body');
-    this.calendar = clone;
+    calendar = clone;
     updateCalendar();
-  }).bind(this)();
+  })();
+
+  // updates the calendar cells based on the value of this.date
+  function updateCalendar () {
+    calendar.find('.calendar-content .table tbody').replaceWith(generateCalendarCells());
+    calendar.find('.month-dropdown .current-month').html(date.format('MMMM'));
+    calendar.find('.year-dropdown .current-year').html(date.year());
+  }
+
+  function generateMonthDropdown () {
+    var monthList = $();
+    moment.months().forEach(function(monthName) {
+      monthList = monthList.add($('<li />', {
+        role : 'presentation'
+      }).append($('<a />', {
+        role : 'menuitem'
+      }).html(monthName).click(function selectMonth() {
+        date.month(monthName);
+        updateCalendar();
+      })));
+    });
+
+    return monthList;
+  }
+
+  function generateYearDropdown () {
+    var yearList = $();
+    var next4Years = [];
+    [0,1,2,3,4].forEach(function(yearIncrement) {
+      next4Years.push(moment(date).add(yearIncrement, 'years').year());
+    });
+    next4Years.forEach(function(year) {
+      yearList = yearList.add($('<li />', {
+        role : 'presentation'
+      }).append($('<a />', {
+        role : 'menuitem'
+      }).html(year).click(function selectYear() {
+        date.year(year);
+        updateCalendar();
+      })));
+    });
+    return yearList;
+  }
 
   // this handler function is invoked when the calendar-button (trigger) is pressed
-  var showCalendar = function(ev) {
+  function showCalendar (ev) {
     // change position to absolute and compute the position so that it is next to the calendar-button (trigger)
-    this.calendar.css({
+    calendar.css({
       position: 'absolute',
       left: trigger.offset().left + trigger.outerWidth() + 'px',
-      top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * this.calendar.outerHeight()) + 'px',
+      top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
       display : 'block'
     });
-    this.calendar.focus();
-  }.bind(this);
+    calendar.focus();
+  }
 
   // this handler function is invoked when the calendar looses focus (e.g. a click on another component other than
   // the calendar. Display 'none' makes the calendar invisible
-  var hideCalendar = function(ev) {
+  function hideCalendar (ev) {
     // this (the use of setTimeout) is an ugly hack but it's not possible any other way...
     setTimeout(function() {
       var target = document.activeElement;
       if (target !== null) {
-        if (this.calendar.get(0) !== target && this.calendar.has(target).length === 0) {
-          this.calendar.css('display', 'none');
+        if (calendar.get(0) !== target && calendar.has(target).length === 0) {
+          calendar.css('display', 'none');
         }
       }
-    }.bind(this), 1);
-  }.bind(this);
+    }, 1);
+  }
 
   // generate the cells of a calendar (the individual days) based on a specific date
-  function generateCalendarCells(date) {
+  function generateCalendarCells() {
 
     //++++++ generation of various handler functions which are used for the cells ++++++
 
     // event handler which changes the background of a component when a user is hovering over it (with the mouse)
-    var hoverIn = function () {
-      $(this).css('background-color', '#D9EDF7');
+    var hoverIn = function (ev) {
+      $(ev.target).css('background-color', '#D9EDF7');
     };
     // event handler which changes the background of a component when a user stops hovering over it
-    var hoverOut = function () {
-      $(this).css('background-color', '#FFFFFF');
+    var hoverOut = function (ev) {
+      $(ev.target).css('background-color', '#FFFFFF');
     };
 
     // ++++ actual generation of table cells ++++
@@ -150,7 +151,7 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
   }
 
   // When the calendar looses focus invoke the hideCalendar handler which is defined above
-  this.calendar.focusout(hideCalendar);
+  calendar.focusout(hideCalendar);
 
   // trigger stands for the calendar-button. Register the showCalendar event handler with the click event of this button
   trigger.click(showCalendar);
