@@ -1,23 +1,17 @@
 "use strict";
 
-moment.locale('de');
 
-
-function KarstelCalendar(trigger, id, header, daySelectCallback) {
+function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
 
   // todays date and time (initialized as soon as new KarstelCalendar() is created)
+  locale = locale || 'de';
+  moment.locale(locale);
   var date = moment();
   var calendar;
+  /*jshint multistr: true */
   var templateString = "<div id='calendar-template' tabindex='0' class='popover right' role='tooltip' style='display: none'>              \
                     <div class='arrow'></div>                                                                                             \
-                    <h3 class='popover-title'></h3>                                                                                       \
-                    <div class='dropdown year-dropdown pull-right'>                                                                       \
-                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>            \
-                    <span class='current-year'></span>                                                                                    \
-                    <span class='caret'></span>                                                                                           \
-                    </button>                                                                                                             \
-                    <ul class='dropdown-menu' role='menu'></ul>                                                                           \
-                    </div>                                                                                                                \
+                    <h3 class='popover-title'></h3>   \
                     <div class='dropdown month-dropdown pull-left'>                                                                       \
                     <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>            \
                     <span class='current-month'></span>                                                                                   \
@@ -25,7 +19,14 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
                     </button>                                                                                                             \
                     <ul class='dropdown-menu' role='menu'></ul>                                                                           \
                     </div>                                                                                                                \
-                    <div class='calendar-content' class='popover-content'>                                                                \
+                    <div class='dropdown year-dropdown pull-right'>                                                                       \
+                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>            \
+                    <span class='current-year'></span>                                                                                    \
+                    <span class='caret'></span>                                                                                           \
+                    </button>                                                                                                             \
+                    <ul class='dropdown-menu' role='menu'></ul>                                                                           \
+                    </div>                                                                                                                \
+                    <div class='calendar-content popover-content'>                                                                        \
                     <table class='table calendar-table'>                                                                                  \
                     <thead></thead>                                                                                                       \
                     <tbody></tbody>                                                                                                       \
