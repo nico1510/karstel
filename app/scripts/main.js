@@ -8,18 +8,42 @@ function KarstelCalendar(trigger, id, header, daySelectCallback) {
   // todays date and time (initialized as soon as new KarstelCalendar() is created)
   var date = moment();
   var calendar;
+  var templateString = "<div id='calendar-template' tabindex='0' class='popover right' role='tooltip' style='display: none'>              \
+                    <div class='arrow'></div>                                                                                             \
+                    <h3 class='popover-title'></h3>                                                                                       \
+                    <div class='dropdown year-dropdown pull-right'>                                                                       \
+                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>            \
+                    <span class='current-year'></span>                                                                                    \
+                    <span class='caret'></span>                                                                                           \
+                    </button>                                                                                                             \
+                    <ul class='dropdown-menu' role='menu'></ul>                                                                           \
+                    </div>                                                                                                                \
+                    <div class='dropdown month-dropdown pull-left'>                                                                       \
+                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>            \
+                    <span class='current-month'></span>                                                                                   \
+                    <span class='caret'></span>                                                                                           \
+                    </button>                                                                                                             \
+                    <ul class='dropdown-menu' role='menu'></ul>                                                                           \
+                    </div>                                                                                                                \
+                    <div class='calendar-content' class='popover-content'>                                                                \
+                    <table class='table calendar-table'>                                                                                  \
+                    <thead></thead>                                                                                                       \
+                    <tbody></tbody>                                                                                                       \
+                    </table>                                                                                                              \
+                    </div>                                                                                                                \
+                    </div>";
 
   // create a clone from the html element with id calendar-template with a new id
   // and fill the calendar content table with table header and table body
   // this method is invoked as soon as new KarstelCalendar() is created
   (function init() {
-    var clone = $('#calendar-template').clone().attr('id', id);
-    clone.find('h3').html(header);
-    clone.find('.month-dropdown ul').append(generateMonthDropdown());
-    clone.find('.year-dropdown ul').append(generateYearDropdown());
-    clone.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
-    clone.appendTo('body');
-    calendar = clone;
+    calendar = $($.parseHTML(templateString));
+    calendar.attr('id', id);
+    calendar.find('h3').html(header);
+    calendar.find('.month-dropdown ul').append(generateMonthDropdown());
+    calendar.find('.year-dropdown ul').append(generateYearDropdown());
+    calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
+    calendar.appendTo('body');
     updateCalendar();
   })();
 
