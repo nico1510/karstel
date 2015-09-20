@@ -11,7 +11,7 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
   /*jshint multistr: true */
   var templateString = "<div id='calendar-template' tabindex='0' class='popover right' role='tooltip' style='display: none'>              \
                     <div class='arrow'></div>                                                                                             \
-                    <h3 class='popover-title'></h3>   \
+                    <h3 class='popover-title'></h3>                                                                                       \
                     <div class='dropdown month-dropdown pull-left'>                                                                       \
                     <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>            \
                     <span class='current-month'></span>                                                                                   \
@@ -147,6 +147,9 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
       for (var d = moment(w.startOf('isoWeek')); d <= w.endOf('isoWeek'); d.add(1, 'days')) {
         // for every day in the week create a new table cell
         cell = $('<td></td>').html(d.format('DD'));
+        if(d < date.startOf('month') || d > date.endOf('month')) {
+          cell.css('color', 'Gainsboro');
+        }
         // now assign the handler functions which are defined above to the cell
         cell.hover(hoverIn,hoverOut);
         cell.click(daySelectCallback.bind(cell, moment(d)));
