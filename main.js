@@ -1,5 +1,3 @@
-"use strict";
-
 
 function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
 
@@ -9,29 +7,29 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
   var date = moment();
   var calendar;
   /*jshint multistr: true */
-  var templateString = "<div id='calendar-template' tabindex='0' class='popover right' role='tooltip' style='display: none'>              \
-                    <div class='arrow'></div>                                                                                             \
-                    <h3 class='popover-title'></h3>                                                                                       \
-                    <div class='dropdown month-dropdown pull-left'>                                                                       \
-                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>            \
-                    <span class='current-month'></span>                                                                                   \
-                    <span class='caret'></span>                                                                                           \
-                    </button>                                                                                                             \
-                    <ul class='dropdown-menu' role='menu'></ul>                                                                           \
-                    </div>                                                                                                                \
-                    <div class='dropdown year-dropdown pull-right'>                                                                       \
-                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>            \
-                    <span class='current-year'></span>                                                                                    \
-                    <span class='caret'></span>                                                                                           \
-                    </button>                                                                                                             \
-                    <ul class='dropdown-menu' role='menu'></ul>                                                                           \
-                    </div>                                                                                                                \
-                    <div class='calendar-content popover-content'>                                                                        \
-                    <table class='table calendar-table'>                                                                                  \
-                    <thead></thead>                                                                                                       \
-                    <tbody></tbody>                                                                                                       \
-                    </table>                                                                                                              \
-                    </div>                                                                                                                \
+  var templateString = "<div id='calendar-template' tabindex='0' class='popover right' role='tooltip' style='display: none; outline: none'>   \
+                    <div class='arrow'></div>                                                                                                   \
+                    <h3 class='popover-title'></h3>                                                                                             \
+                    <div class='dropdown month-dropdown pull-left'>                                                                             \
+                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
+                    <span class='current-month'></span>                                                                                         \
+                    <span class='caret'></span>                                                                                                 \
+                    </button>                                                                                                                   \
+                    <ul class='dropdown-menu' role='menu'></ul>                                                                                 \
+                    </div>                                                                                                                      \
+                    <div class='dropdown year-dropdown pull-right'>                                                                             \
+                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
+                    <span class='current-year'></span>                                                                                          \
+                    <span class='caret'></span>                                                                                                 \
+                    </button>                                                                                                                   \
+                    <ul class='dropdown-menu' role='menu'></ul>                                                                                 \
+                    </div>                                                                                                                      \
+                    <div class='calendar-content popover-content'>                                                                              \
+                    <table class='table calendar-table'>                                                                                        \
+                    <thead></thead>                                                                                                             \
+                    <tbody></tbody>                                                                                                             \
+                    </table>                                                                                                                    \
+                    </div>                                                                                                                      \
                     </div>";
 
   // create a clone from the html element with id calendar-template with a new id
@@ -126,12 +124,24 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
       $(ev.target).css('background-color', '#D9EDF7');
     };
     // event handler which changes the background of a component when a user stops hovering over it
-    var hoverOut = function (ev) {
-      $(ev.target).css('background-color', '#FFFFFF');
+    var hoverOut = function (color) {
+      return function hoverOutHandler(ev) {
+        $(ev.target).css('background-color', color);
+      };
+    };
+    var hoverOutFunction;
+
+    var unselectableText = {
+      '-moz-user-select': '-moz-none',
+      '-khtml-user-select': 'none',
+      '-webkit-user-select': 'none',
+      '-ms-user-select': 'none',
+      'user-select': 'none',
+      'cursor': 'pointer'
     };
 
     // ++++ actual generation of table cells ++++
-    var tbody = $('<tbody></tbody>');
+    var tbody = $('<tbody></tbody>').css(unselectableText);
     var trow;
     var cell;
     var w = moment(date.startOf('month'));
@@ -147,11 +157,15 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
       for (var d = moment(w.startOf('isoWeek')); d <= w.endOf('isoWeek'); d.add(1, 'days')) {
         // for every day in the week create a new table cell
         cell = $('<td></td>').html(d.format('DD'));
+        hoverOutFunction=hoverOut('White');
         if(d < date.startOf('month') || d > date.endOf('month')) {
           cell.css('color', 'Gainsboro');
+        } else if(d.isSame(new Date(), "day")) {
+          cell.css('background-color', 'LightPink');
+          hoverOutFunction=hoverOut('LightPink');
         }
         // now assign the handler functions which are defined above to the cell
-        cell.hover(hoverIn,hoverOut);
+        cell.hover(hoverIn,hoverOutFunction);
         cell.click(daySelectCallback.bind(cell, moment(d)));
         trow.append(cell);
       }
@@ -184,13 +198,3 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
   // trigger stands for the calendar-button. Register the showCalendar event handler with the click event of this button
   trigger.click(showCalendar);
 }
-
-
-// create two test objects of KarstelCalendar. The function onDaySelect corresponds to the daySelectCallback function
-// in the KarstelCalendar object and is executed as soon a day in the calendar is clicked.
-var startCal = new KarstelCalendar($('#start-calendar-button'), 'start-calendar-content', 'Anreisedatum', function onDaySelect(d) {
-  console.log(d.format('LLLL'));
-});
-var endCal = new KarstelCalendar($('#end-calendar-button'), 'end-calendar-content', 'Abreisedatum', function onDaySelect(d) {
-  console.log(d.format('LLLL'));
-});
