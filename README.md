@@ -2,6 +2,7 @@
 ## Dependencies
 + [moment.js](http://momentjs.com)
 + [bootstrap](http://getbootstrap.com)
+
 ## Documentation
 KarstelCalendar(trigger, id, header, daySelectCallback, locale)
 + trigger: triggering element. Clicking this element triggers the widget. Widget appears next to the trigger element
