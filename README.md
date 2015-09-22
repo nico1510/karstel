@@ -18,3 +18,6 @@ var startCal = new KarstelCalendar($('#start-calendar-button'), 'start-calendar-
         console.log(d.format('LLLL'));  // just log the selected date
  });
 ```
+
+## Example
+![sample image](https://cloud.githubusercontent.com/assets/5033050/10024086/c9942c96-6155-11e5-87e6-14e312493afc.png)
