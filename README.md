@@ -13,7 +13,8 @@ KarstelCalendar(trigger, id, header, daySelectCallback, locale)
 
 ## Usage example
 ```javascript
-var startCal = new KarstelCalendar($('#start-calendar-button'), 'start-calendar-content', 'Anreisedatum', function onDaySelect(d) {
-        console.log(d.format('LLLL'));
-        });
+var startCal = new KarstelCalendar($('#start-calendar-button'), 'start-calendar-content', 'Check-in date',
+ function onDaySelect(d) {
+        console.log(d.format('LLLL'));  // just log the selected date
+ });
 ```
