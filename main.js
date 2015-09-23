@@ -157,16 +157,20 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
       for (var d = moment(w.startOf('isoWeek')); d <= w.endOf('isoWeek'); d.add(1, 'days')) {
         // for every day in the week create a new table cell
         cell = $('<td></td>').html(d.format('DD'));
-        hoverOutFunction=hoverOut('White');
         if(d < date.startOf('month') || d > date.endOf('month')) {
           cell.css('color', 'Gainsboro');
         } else if(d.isSame(new Date(), "day")) {
-          cell.css('background-color', 'LightPink');
-          hoverOutFunction=hoverOut('LightPink');
+          cell.css({  'font-weight' : 'bold',
+            'color': 'Maroon'});
+          hoverOutFunction=hoverOut('White');
         }
         // now assign the handler functions which are defined above to the cell
+        hoverOutFunction=hoverOut('White');
         cell.hover(hoverIn,hoverOutFunction);
-        cell.click(daySelectCallback.bind(cell, moment(d)));
+        cell.click(function executeCallbackAndHideCalendar(calendarCell, day) {
+          daySelectCallback(calendarCell, day);
+          calendar.css('display', 'none');
+        }.bind(cell, moment(d)));
         trow.append(cell);
       }
       tbody.append(trow);
