@@ -162,7 +162,6 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
         } else if(d.isSame(new Date(), "day")) {
           cell.css({  'font-weight' : 'bold',
             'color': 'Maroon'});
-          hoverOutFunction=hoverOut('White');
         }
         // now assign the handler functions which are defined above to the cell
         hoverOutFunction=hoverOut('White');
