@@ -20,4 +20,4 @@ var startCal = new KarstelCalendar($('#start-calendar-button'), 'start-calendar-
 ```
 
 ## Example
-![sample image](https://cloud.githubusercontent.com/assets/5033050/10024086/c9942c96-6155-11e5-87e6-14e312493afc.png)
+![sample image](https://cloud.githubusercontent.com/assets/5033050/10052597/171af012-6228-11e5-8d14-0276a13499a2.png)
