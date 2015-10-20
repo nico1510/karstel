@@ -1,14 +1,30 @@
-
-function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
+function KarstelCalendar(trigger, id, header, daySelectCallback, locale, orientation) {
 
   // todays date and time (initialized as soon as new KarstelCalendar() is created)
-  locale = locale || 'de';
+  var locale = locale || 'de';
+  var orientation = orientation || 'e';
   moment.locale(locale);
   var date = moment();
   var calendar;
-  /*jshint multistr: true */
-  var templateString = "<div id='calendar-template' tabindex='0' class='popover right' role='tooltip' style='display: none; outline: none'>   \
-                    <div class='arrow'></div>                                                                                                   \
+  var arrowPos;
+  switch (orientation) {
+    case 'e':
+      arrowPos = 'right';
+      break;
+    case 'w':
+      arrowPos = 'left';
+      break;
+    case 'n':
+      arrowPos = 'top';
+      break;
+    case 's':
+      arrowPos = 'bottom';
+      break;
+
+  }
+  /*jshint multistr: true */    console.log(templateString);
+  var templateString = "<div id='calendar-template' tabindex='0' class='popover " + arrowPos + "' role='tooltip' style='display: none; outline: none'> "
+      + "<div class='arrow'></div>                                                                                                   \
                     <h3 class='popover-title'></h3>                                                                                             \
                     <div class='dropdown month-dropdown pull-left'>                                                                             \
                     <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
@@ -47,19 +63,19 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
   })();
 
   // updates the calendar cells based on the value of this.date
-  function updateCalendar () {
+  function updateCalendar() {
     calendar.find('.calendar-content .table tbody').replaceWith(generateCalendarCells());
     calendar.find('.month-dropdown .current-month').html(date.format('MMMM'));
     calendar.find('.year-dropdown .current-year').html(date.year());
   }
 
-  function generateMonthDropdown () {
+  function generateMonthDropdown() {
     var monthList = $();
-    moment.months().forEach(function(monthName) {
+    moment.months().forEach(function (monthName) {
       monthList = monthList.add($('<li />', {
-        role : 'presentation'
+        role: 'presentation'
       }).append($('<a />', {
-        role : 'menuitem'
+        role: 'menuitem'
       }).html(monthName).click(function selectMonth() {
         date.month(monthName);
         updateCalendar();
@@ -89,22 +105,53 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
   }
 
   // this handler function is invoked when the calendar-button (trigger) is pressed
-  function showCalendar (ev) {
+  function showCalendar(ev) {
     // change position to absolute and compute the position so that it is next to the calendar-button (trigger)
-    calendar.css({
-      position: 'absolute',
-      left: trigger.offset().left + trigger.outerWidth() + 'px',
-      top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
-      display : 'block'
-    });
+    switch (orientation) {
+      case 'e':
+        calendar.css({
+          position: 'absolute',
+          left: trigger.offset().left + trigger.outerWidth() + 'px',
+          top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
+          display: 'block'
+        });
+        break;
+
+      case 'w':
+        calendar.css({
+          position: 'absolute',
+          left: trigger.offset().left - calendar.outerWidth() + 'px',
+          top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
+          display: 'block'
+        });
+        break;
+
+      case 'n':
+        calendar.css({
+          position: 'absolute',
+          left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
+          top: trigger.offset().top - calendar.outerHeight() + 'px',
+          display: 'block'
+        });
+        break;
+
+      case 's':
+        calendar.css({
+          position: 'absolute',
+          left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
+          top: trigger.offset().top + trigger.outerHeight() + 'px',
+          display: 'block'
+        });
+        break;
+    }
     calendar.focus();
   }
 
   // this handler function is invoked when the calendar looses focus (e.g. a click on another component other than
   // the calendar. Display 'none' makes the calendar invisible
-  function hideCalendar (ev) {
+  function hideCalendar(ev) {
     // this (the use of setTimeout) is an ugly hack but it's not possible any other way...
-    setTimeout(function() {
+    setTimeout(function () {
       var target = document.activeElement;
       if (target !== null) {
         if (calendar.get(0) !== target && calendar.has(target).length === 0) {
@@ -146,8 +193,8 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
     var cell;
     var w = moment(date.startOf('month'));
     var firstWeek = true;
-    while(w < date.endOf('month')) {
-      if(firstWeek) {
+    while (w < date.endOf('month')) {
+      if (firstWeek) {
         firstWeek = false;
       } else {
         w.add(1, 'weeks');
@@ -157,15 +204,17 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale) {
       for (var d = moment(w.startOf('isoWeek')); d <= w.endOf('isoWeek'); d.add(1, 'days')) {
         // for every day in the week create a new table cell
         cell = $('<td></td>').html(d.format('DD'));
-        if(d < date.startOf('month') || d > date.endOf('month')) {
+        if (d < date.startOf('month') || d > date.endOf('month')) {
           cell.css('color', 'Gainsboro');
-        } else if(d.isSame(new Date(), "day")) {
-          cell.css({  'font-weight' : 'bold',
-            'color': 'Maroon'});
+        } else if (d.isSame(new Date(), "day")) {
+          cell.css({
+            'font-weight': 'bold',
+            'color': 'Maroon'
+          });
         }
         // now assign the handler functions which are defined above to the cell
-        hoverOutFunction=hoverOut('White');
-        cell.hover(hoverIn,hoverOutFunction);
+        hoverOutFunction = hoverOut('White');
+        cell.hover(hoverIn, hoverOutFunction);
         cell.click(function executeCallbackAndHideCalendar(calendarCell, day) {
           daySelectCallback(calendarCell, day);
           calendar.css('display', 'none');
