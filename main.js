@@ -22,7 +22,7 @@ function KarstelCalendar(trigger, id, header, daySelectCallback, locale, orienta
       break;
 
   }
-  /*jshint multistr: true */    console.log(templateString);
+  /*jshint multistr: true */
   var templateString = "<div id='calendar-template' tabindex='0' class='popover " + arrowPos + "' role='tooltip' style='display: none; outline: none'> "
       + "<div class='arrow'></div>                                                                                                   \
                     <h3 class='popover-title'></h3>                                                                                             \
