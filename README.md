@@ -10,7 +10,7 @@ KarstelCalendar(trigger, id, header, daySelectCallback, locale, orientation)
 + header: specify the header text of the widget
 + daySelectCallback: provide a callback function to handle the user selection
 + locale: specify the locale (the locale stems from moment.js so the correspding language files have to be present too)
-+ orientation: specify on which side of the trigger, the calendar is opened possible values : 'e' (east), 'w' (west), 'n' (north), 's' (south)
++ orientation: specify on which side of the trigger, the calendar is opened. Possible values: 'e' (east), 'w' (west), 'n' (north), 's' (south)
 
 ## Usage example
 ```javascript
