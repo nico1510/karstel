@@ -1,6 +1,4 @@
 function KarstelCalendar(options) {
-    // trigger, id, header, daySelectCallback, locale, orientation
-    // todays date and time (initialized as soon as new KarstelCalendar() is created
     var trigger = options.trigger;
     var daySelectCallback = options.daySelectCallback;
     var id = options.id || 'karstelCalendar';
@@ -8,6 +6,7 @@ function KarstelCalendar(options) {
     var locale = options.locale || 'en';
     var orientation = options.orientation || 'e';
 
+    // todays date and time (initialized as soon as new KarstelCalendar() is created
     moment.locale(locale);
     var date = moment();
     var calendar;
