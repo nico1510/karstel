@@ -20,12 +20,12 @@ use `KarstelCalendar(options)` to create a new calendar, where options can conta
          console.log(d.format('dddd, LL'));
      },
      id: 'myCalenderId',
-     header: 'Pick a date',
+     header: 'Check-in date',
      locale: 'en',
      orientation: 'e'
      };
 
-     var startCal = new KarstelCalendar(options);
+ var startCal = new KarstelCalendar(options);
 ```
 
 ## Example
