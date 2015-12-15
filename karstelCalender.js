@@ -44,6 +44,7 @@ function KarstelCalendar(options) {
         date.locale(self.locale);
         moment.locale(self.locale);
         calendar.find('.month-dropdown ul').html(generateMonthDropdown());
+        calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
         updateCalendar();
         return self;
     };
