@@ -27,7 +27,6 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="//maxcdn.bootstrapcdn.com/js/ie10-viewport-bug-workaround.js"></script>
 <script>
-    $(document).ready(function () {
 
         var options = {
             trigger: $('#myButtonId'),
@@ -37,11 +36,11 @@
             id: 'myCalenderId',
             header: 'Pick a date',
             locale: 'en',
-            orientation: 'e'
+            orientation: 'e',
+            startYear: 2005
         };
 
         var startCal = new KarstelCalendar(options);
-    });
 </script>
 </body>
 </html>

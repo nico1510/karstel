@@ -1,173 +1,82 @@
 function KarstelCalendar(options) {
-    var trigger = options.trigger;
-    var daySelectCallback = options.daySelectCallback;
-    var id = options.id || 'karstelCalendar';
-    var header = options.header || 'Select date';
-    var locale = options.locale || 'en';
-    var orientation = options.orientation || 'e';
+    var self = this;
+    self.trigger = options.trigger;
+    self.daySelectCallback = options.daySelectCallback || function noop() {};
+    self.id = options.id || 'karstelCalendar';
+    self.header = options.header || 'Select date';
+    self.locale = options.locale || 'en';
+    self.orientation = options.orientation || 'e';
+    self.startYear = options.startYear || moment().year();
+    self.endYear = options.endYear || moment().add(4, 'years').year();
 
-    // todays date and time (initialized as soon as new KarstelCalendar() is created
-    moment.locale(locale);
-    var date = moment();
+    // the calendar jquery object
     var calendar;
-    var arrowPos;
-    switch (orientation) {
-        case 'e':
-            arrowPos = 'right';
-            break;
-        case 'w':
-            arrowPos = 'left';
-            break;
-        case 'n':
-            arrowPos = 'top';
-            break;
-        case 's':
-            arrowPos = 'bottom';
-            break;
+    moment.locale(self.locale);
+    // todays date and time (initialized as soon as new KarstelCalendar() is created
+    var date = moment().set('year', self.startYear).set('month', (options.startYear) ? 0 : moment().month());
+    render(true);
 
-    }
-    /*jshint multistr: true */
-    var templateString = "<div id='calendar-template' tabindex='0' class='popover " + arrowPos + "' role='tooltip' style='display: none; outline: none'> "
-        + "<div class='arrow'></div>                                                                                                   \
-                    <h3 class='popover-title'></h3>                                                                                             \
-                    <div class='dropdown month-dropdown pull-left'>                                                                             \
-                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
-                    <span class='current-month'></span>                                                                                         \
-                    <span class='caret'></span>                                                                                                 \
-                    </button>                                                                                                                   \
-                    <ul class='dropdown-menu' role='menu'></ul>                                                                                 \
-                    </div>                                                                                                                      \
-                    <div class='dropdown year-dropdown pull-right'>                                                                             \
-                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
-                    <span class='current-year'></span>                                                                                          \
-                    <span class='caret'></span>                                                                                                 \
-                    </button>                                                                                                                   \
-                    <ul class='dropdown-menu' role='menu'></ul>                                                                                 \
-                    </div>                                                                                                                      \
-                    <div class='calendar-content popover-content'>                                                                              \
-                    <table class='table calendar-table'>                                                                                        \
-                    <thead></thead>                                                                                                             \
-                    <tbody></tbody>                                                                                                             \
-                    </table>                                                                                                                    \
-                    </div>                                                                                                                      \
-                    </div>";
+    self.setTrigger = function (trigger) {
+        self.trigger = trigger;
+        return self;
+    };
 
-    // create a clone from the html element with id calendar-template with a new id
-    // and fill the calendar content table with table header and table body
-    // this method is invoked as soon as new KarstelCalendar() is created
-    (function init() {
-        calendar = $($.parseHTML(templateString));
-        calendar.attr('id', id);
-        calendar.find('h3').html(header);
-        calendar.find('.month-dropdown ul').append(generateMonthDropdown());
-        calendar.find('.year-dropdown ul').append(generateYearDropdown());
-        calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
-        calendar.appendTo('body');
+    self.setDaySelectCallback = function (daySelectCallback) {
+        self.daySelectCallback = daySelectCallback;
         updateCalendar();
-    })();
+        return self;
+    };
 
-    // updates the calendar cells based on the value of this.date
-    function updateCalendar() {
-        calendar.find('.calendar-content .table tbody').replaceWith(generateCalendarCells());
-        calendar.find('.month-dropdown .current-month').html(date.format('MMMM'));
-        calendar.find('.year-dropdown .current-year').html(date.year());
-    }
+    self.setId = function (id) {
+        self.id = id;
+        calendar.attr('id', self.id);
+        return self;
+    };
 
-    function generateMonthDropdown() {
-        var monthList = $();
-        moment.months().forEach(function (monthName) {
-            monthList = monthList.add($('<li />', {
-                role: 'presentation'
-            }).append($('<a />', {
-                role: 'menuitem'
-            }).html(monthName).click(function selectMonth() {
-                date.month(monthName);
-                updateCalendar();
-            })));
-        });
+    self.setHeader = function (header) {
+        self.header = header;
+        calendar.find('h3').html(self.header);
+        return self;
+    };
 
-        return monthList;
-    }
+    self.setLocale = function (locale) {
+        self.locale = locale;
+        date.locale(self.locale);
+        moment.locale(self.locale);
+        calendar.find('.month-dropdown ul').html(generateMonthDropdown());
+        updateCalendar();
+        return self;
+    };
 
-    function generateYearDropdown() {
-        var yearList = $();
-        var next4Years = [];
-        [0, 1, 2, 3, 4].forEach(function (yearIncrement) {
-            next4Years.push(moment(date).add(yearIncrement, 'years').year());
-        });
-        next4Years.forEach(function (year) {
-            yearList = yearList.add($('<li />', {
-                role: 'presentation'
-            }).append($('<a />', {
-                role: 'menuitem'
-            }).html(year).click(function selectYear() {
-                date.year(year);
-                updateCalendar();
-            })));
-        });
-        return yearList;
-    }
+    self.setOrientation = function (orientation) {
+        //FIXME: doesn't work yet
+        self.orientation = orientation;
+        render(false);
+        return self;
+    };
 
-    // this handler function is invoked when the calendar-button (trigger) is pressed
-    function showCalendar(ev) {
-        // change position to absolute and compute the position so that it is next to the calendar-button (trigger)
-        switch (orientation) {
-            case 'e':
-                calendar.css({
-                    position: 'absolute',
-                    left: trigger.offset().left + trigger.outerWidth() + 'px',
-                    top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
-                    display: 'block'
-                });
-                break;
-
-            case 'w':
-                calendar.css({
-                    position: 'absolute',
-                    left: trigger.offset().left - calendar.outerWidth() + 'px',
-                    top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
-                    display: 'block'
-                });
-                break;
-
-            case 'n':
-                calendar.css({
-                    position: 'absolute',
-                    left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
-                    top: trigger.offset().top - calendar.outerHeight() + 'px',
-                    display: 'block'
-                });
-                break;
-
-            case 's':
-                calendar.css({
-                    position: 'absolute',
-                    left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
-                    top: trigger.offset().top + trigger.outerHeight() + 'px',
-                    display: 'block'
-                });
-                break;
+    self.setStartYear = function (startYear) {
+        self.startYear = startYear;
+        if (date.get('year') < startYear) {
+            date.set('year', startYear);
+            calendar.find('.year-dropdown .current-year').html(date.year());
         }
-        calendar.focus();
-    }
+        calendar.find('.year-dropdown ul').html(generateYearDropdown(self.startYear, self.endYear));
+        return self;
+    };
 
-    // this handler function is invoked when the calendar looses focus (e.g. a click on another component other than
-    // the calendar. Display 'none' makes the calendar invisible
-    function hideCalendar(ev) {
-        // this (the use of setTimeout) is an ugly hack but it's not possible any other way...
-        setTimeout(function () {
-            var target = document.activeElement;
-            if (target !== null) {
-                if (calendar.get(0) !== target && calendar.has(target).length === 0) {
-                    calendar.css('display', 'none');
-                }
-            }
-        }, 1);
-    }
+    self.setEndYear = function (endYear) {
+        self.endYear = endYear;
+        if (date.get('year') > endYear) {
+            date.set('year', endYear);
+            calendar.find('.year-dropdown .current-year').html(date.year());
+        }
+        calendar.find('.year-dropdown ul').html(generateYearDropdown(self.startYear, self.endYear));
+        return self;
+    };
 
     // generate the cells of a calendar (the individual days) based on a specific date
     function generateCalendarCells() {
-
         //++++++ generation of various handler functions which are used for the cells ++++++
 
         // event handler which changes the background of a component when a user is hovering over it (with the mouse)
@@ -219,15 +128,190 @@ function KarstelCalendar(options) {
                 // now assign the handler functions which are defined above to the cell
                 hoverOutFunction = hoverOut('White');
                 cell.hover(hoverIn, hoverOutFunction);
-                cell.click(function executeCallbackAndHideCalendar(calendarCell, day) {
-                    daySelectCallback(calendarCell, day);
-                    calendar.css('display', 'none');
-                }.bind(cell, moment(d)));
+                (function (theCallBack) {
+                    cell.click(function executeCallbackAndHideCalendar(calendarCell, day) {
+                        theCallBack(calendarCell, day);
+                        calendar.css('display', 'none');
+                    }.bind(cell, moment(d)));
+                })(self.daySelectCallback);
                 trow.append(cell);
             }
             tbody.append(trow);
         }
         return tbody;
+    }
+
+    // create a clone from the html element with id calendar-template with a new id
+    // and fill the calendar content table with table header and table body
+    // this method is invoked as soon as new KarstelCalendar() is created
+    function render(init) {
+        var arrowPos;
+        switch (self.orientation) {
+            case 'e':
+                arrowPos = 'right';
+                break;
+            case 'w':
+                arrowPos = 'left';
+                break;
+            case 'n':
+                arrowPos = 'top';
+                break;
+            case 's':
+                arrowPos = 'bottom';
+                break;
+
+        }
+
+        /*jshint multistr: true */
+        var templateString = "<div id='calendar-template' tabindex='0' class='popover " + arrowPos + "' role='tooltip' style='display: none; outline: none'> "
+            + "<div class='arrow'></div>                                                                                                   \
+                    <h3 class='popover-title'></h3>                                                                                             \
+                    <div class='dropdown month-dropdown pull-left'>                                                                             \
+                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
+                    <span class='current-month'></span>                                                                                         \
+                    <span class='caret'></span>                                                                                                 \
+                    </button>                                                                                                                   \
+                    <ul class='dropdown-menu' role='menu'></ul>                                                                                 \
+                    </div>                                                                                                                      \
+                    <div class='dropdown year-dropdown pull-right'>                                                                             \
+                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
+                    <span class='current-year'></span>                                                                                          \
+                    <span class='caret'></span>                                                                                                 \
+                    </button>                                                                                                                   \
+                    <ul class='dropdown-menu' role='menu'></ul>                                                                                 \
+                    </div>                                                                                                                      \
+                    <div class='calendar-content popover-content'>                                                                              \
+                    <table class='table calendar-table'>                                                                                        \
+                    <thead></thead>                                                                                                             \
+                    <tbody></tbody>                                                                                                             \
+                    </table>                                                                                                                    \
+                    </div>                                                                                                                      \
+                    </div>";
+
+        calendar = $($.parseHTML(templateString));
+        calendar.attr('id', self.id);
+        calendar.find('h3').html(self.header);
+        calendar.find('.month-dropdown ul').append(generateMonthDropdown());
+        calendar.find('.year-dropdown ul').append(generateYearDropdown(self.startYear, self.endYear));
+        calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
+        if (init) {
+            calendar.appendTo('body');
+        }
+        updateCalendar();
+    }
+
+    // updates the calendar cells based on the value of this.date
+    function updateCalendar() {
+        calendar.find('.calendar-content .table tbody').replaceWith(generateCalendarCells());
+        calendar.find('.month-dropdown .current-month').html(date.format('MMMM'));
+        calendar.find('.year-dropdown .current-year').html(date.year());
+    }
+
+    function generateMonthDropdown() {
+        var monthList = $();
+        moment.months().forEach(function (monthName, index) {
+            monthList = monthList.add($('<li />', {
+                    role: 'presentation'
+                }).append($('<a />', {
+                        role: 'menuitem'
+                    }).html(monthName)
+                        .click(function selectMonth() {
+                        date.month(index);
+                        updateCalendar();
+                    })
+                )
+            );
+        });
+
+        return monthList;
+    }
+
+    // returns a closed interval from start to end
+    function getClosedInterval(start, end) {
+        var interval = new Array(end - start);
+
+        for (var i = start; i <= end; i++) {
+            interval[i - start] = i;
+        }
+        return interval;
+    }
+
+
+    function generateYearDropdown(startYear, endYear) {
+        if (startYear > endYear) {
+            throw Error('startYear must be smaller than endYear');
+        }
+        var yearList = $();
+        var nextYears = getClosedInterval(startYear, endYear);
+
+        nextYears.forEach(function (year) {
+            yearList = yearList.add($('<li />', {
+                role: 'presentation'
+            }).append($('<a />', {
+                role: 'menuitem'
+            }).html(year).click(function selectYear() {
+                date.year(year);
+                updateCalendar();
+            })));
+        });
+        return yearList;
+    }
+
+    // this handler function is invoked when the calendar-button (trigger) is pressed
+    function showCalendar(ev) {
+        // change position to absolute and compute the position so that it is next to the calendar-button (trigger)
+        switch (self.orientation) {
+            case 'e':
+                calendar.css({
+                    position: 'absolute',
+                    left: self.trigger.offset().left + self.trigger.outerWidth() + 'px',
+                    top: self.trigger.offset().top + (0.5 * self.trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
+                    display: 'block'
+                });
+                break;
+
+            case 'w':
+                calendar.css({
+                    position: 'absolute',
+                    left: self.trigger.offset().left - calendar.outerWidth() + 'px',
+                    top: self.trigger.offset().top + (0.5 * self.trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
+                    display: 'block'
+                });
+                break;
+
+            case 'n':
+                calendar.css({
+                    position: 'absolute',
+                    left: self.trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * self.trigger.outerWidth()) + 'px',
+                    top: self.trigger.offset().top - calendar.outerHeight() + 'px',
+                    display: 'block'
+                });
+                break;
+
+            case 's':
+                calendar.css({
+                    position: 'absolute',
+                    left: self.trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * self.trigger.outerWidth()) + 'px',
+                    top: self.trigger.offset().top + self.trigger.outerHeight() + 'px',
+                    display: 'block'
+                });
+                break;
+        }
+        calendar.focus();
+    }
+
+    // this handler function is invoked when the calendar looses focus (e.g. a click on another component other than
+    // the calendar. Display 'none' makes the calendar invisible
+    function hideCalendar(ev) {
+        // this (the use of setTimeout) is an ugly hack but it's not possible any other way...
+        setTimeout(function () {
+            var target = document.activeElement;
+            if (target !== null) {
+                if (calendar.get(0) !== target && calendar.has(target).length === 0) {
+                    calendar.css('display', 'none');
+                }
+            }
+        }, 1);
     }
 
     function generateCalendarHeader() {
@@ -252,5 +336,5 @@ function KarstelCalendar(options) {
     calendar.focusout(hideCalendar);
 
     // trigger stands for the calendar-button. Register the showCalendar event handler with the click event of this button
-    trigger.click(showCalendar);
+    self.trigger.click(showCalendar);
 }
