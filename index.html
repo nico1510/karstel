@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Karstel by nico1510</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Karstel</h1>
+      <h2 class="project-tagline">A simple javascript calender widget with bootstrap</h2>
+      <a href="https://github.com/nico1510/karstel" class="btn">View on GitHub</a>
+      <a href="https://github.com/nico1510/karstel/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/nico1510/karstel/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h2>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h2>
+
+<ul>
+<li><a href="http://momentjs.com">moment.js</a></li>
+<li><a href="http://getbootstrap.com">bootstrap</a></li>
+</ul>
+
+<h2>
+<a id="documentation" class="anchor" href="#documentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Documentation</h2>
+
+<p>use <code>new KarstelCalendar(options)</code> to create a new calendar, where options can contain the following properties: </p>
+
+<table>
+<thead>
+<tr>
+<th>property</th>
+<th>description</th>
+<th>default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>trigger</td>
+<td>This property is mandatory. It defines the triggering element. Clicking this element triggers the widget. Widget appears next to the trigger element</td>
+<td></td>
+</tr>
+<tr>
+<td>daySelectCallback</td>
+<td>provide a callback function to handle the user selection. A moment date object with the selected date is passed to the callback and can be handled there</td>
+<td><code>function noop() {}</code></td>
+</tr>
+<tr>
+<td>id</td>
+<td>specify an ID for the calender widget</td>
+<td>'karstelCalendar'</td>
+</tr>
+<tr>
+<td>header</td>
+<td>specify the header text of the widget</td>
+<td>'Select date'</td>
+</tr>
+<tr>
+<td>locale</td>
+<td>specify the locale. The locale stems from moment.js, so the corresponding language files have to be present too!</td>
+<td>'en'</td>
+</tr>
+<tr>
+<td>orientation</td>
+<td>specify on which side of the trigger, the calendar is opened. Possible values: 'e' (east), 'w' (west), 'n' (north), 's' (south)</td>
+<td>'e'</td>
+</tr>
+<tr>
+<td>startYear</td>
+<td>year where the calendar starts</td>
+<td>current year</td>
+</tr>
+<tr>
+<td>endYear</td>
+<td>year where the calendar ends</td>
+<td>current year + 4</td>
+</tr>
+<tr>
+<td>hideAfterSelect</td>
+<td>determines whether the calendar should be closed after the user has selected a date</td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="usage-example" class="anchor" href="#usage-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage example</h2>
+
+<div class="highlight highlight-source-js"><pre> <span class="pl-k">var</span> options <span class="pl-k">=</span> {
+     trigger<span class="pl-k">:</span> <span class="pl-en">$</span>(<span class="pl-s"><span class="pl-pds">'</span>#myButtonId<span class="pl-pds">'</span></span>),
+     <span class="pl-en">daySelectCallback</span><span class="pl-k">:</span> <span class="pl-k">function</span> <span class="pl-en">onDaySelect</span>(<span class="pl-smi">d</span>) {
+         <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-smi">d</span>.<span class="pl-en">format</span>(<span class="pl-s"><span class="pl-pds">'</span>dddd, LL<span class="pl-pds">'</span></span>));
+     },
+     id<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>myCalenderId<span class="pl-pds">'</span></span>,
+     header<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Check-in date<span class="pl-pds">'</span></span>,
+     locale<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>en<span class="pl-pds">'</span></span>,
+     orientation<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>e<span class="pl-pds">'</span></span>
+     };
+
+ <span class="pl-k">var</span> startCal <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">KarstelCalendar</span>(options);</pre></div>
+
+<p>options can also be changed via setters after the object is instantiated: </p>
+
+<div class="highlight highlight-source-js"><pre> <span class="pl-smi">startCal</span>.<span class="pl-smi">header</span> <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>The new header text<span class="pl-pds">'</span></span>;
+
+ <span class="pl-c">// or with chainable setters</span>
+ <span class="pl-smi">startCal</span>.<span class="pl-en">locale</span>(<span class="pl-s"><span class="pl-pds">'</span>de<span class="pl-pds">'</span></span>).<span class="pl-en">header</span>(<span class="pl-s"><span class="pl-pds">'</span>Datum<span class="pl-pds">'</span></span>);</pre></div>
+
+<p>to get an option property use</p>
+
+<div class="highlight highlight-source-js"><pre> <span class="pl-smi">startCal</span>.<span class="pl-en">header</span>();
+ <span class="pl-c">// 'Select date'</span></pre></div>
+
+<p>to show or close the calendar explicitly</p>
+
+<div class="highlight highlight-source-js"><pre> <span class="pl-smi">startCal</span>.<span class="pl-en">showCalendar</span>();
+ <span class="pl-c">// or respectively</span>
+ <span class="pl-smi">startCal</span>.<span class="pl-en">hideCalendar</span>();</pre></div>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h2>
+
+<p><img src="https://cloud.githubusercontent.com/assets/5033050/10052597/171af012-6228-11e5-8d14-0276a13499a2.png" alt="sample image"></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/nico1510/karstel">Karstel</a> is maintained by <a href="https://github.com/nico1510">nico1510</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
