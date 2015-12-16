@@ -113,10 +113,10 @@ function KarstelCalendar(options) {
         return setOrientation;
     });
 
-    function setOrientation(orientation) {
+    function setOrientation(val) {
         if (val !== undefined) {
             //FIXME: doesn't work yet
-            orientation = orientation;
+            orientation = val;
             render(false);
             return self;
         } else {
@@ -225,12 +225,10 @@ function KarstelCalendar(options) {
                 // now assign the handler functions which are defined above to the cell
                 hoverOutFunction = hoverOut('White');
                 cell.hover(hoverIn, hoverOutFunction);
-                (function (theCallBack) {
                     cell.click(function executeCallbackAndHideCalendar(calendarCell, day) {
-                        theCallBack(calendarCell, day);
+                        daySelectCallback(calendarCell, day);
                         calendar.css('display', 'none');
                     }.bind(cell, moment(d)));
-                })(daySelectCallback);
                 trow.append(cell);
             }
             tbody.append(trow);
