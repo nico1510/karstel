@@ -329,14 +329,14 @@ function KarstelCalendar(options) {
             + "<div class='arrow'></div>                                                                                                   \
                     <h3 class='popover-title'></h3>                                                                                             \
                     <div class='dropdown month-dropdown pull-left'>                                                                             \
-                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
+                    <button class='btn btn-default dropdown-toggle' style='border: none; background-color: #fff' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
                     <span class='current-month'></span>                                                                                         \
                     <span class='caret'></span>                                                                                                 \
                     </button>                                                                                                                   \
                     <ul class='dropdown-menu' role='menu'></ul>                                                                                 \
                     </div>                                                                                                                      \
                     <div class='dropdown year-dropdown pull-right'>                                                                             \
-                    <button class='btn btn-default dropdown-toggle' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
+                    <button class='btn btn-default dropdown-toggle' style='border: none; background-color: #fff' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
                     <span class='current-year'></span>                                                                                          \
                     <span class='caret'></span>                                                                                                 \
                     </button>                                                                                                                   \
@@ -353,8 +353,8 @@ function KarstelCalendar(options) {
         calendar = $($.parseHTML(templateString));
         calendar.attr('id', id);
         calendar.find('h3').html(header);
-        calendar.find('.month-dropdown ul').append(generateMonthDropdown());
-        calendar.find('.year-dropdown ul').append(generateYearDropdown(startYear, endYear));
+        calendar.find('.month-dropdown ul').css('min-width', '0px').html(generateMonthDropdown());
+        calendar.find('.year-dropdown ul').css('min-width', '0px').html(generateYearDropdown(startYear, endYear));
         calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
         if (init) {
             calendar.appendTo('body');

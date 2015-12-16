@@ -4,19 +4,19 @@
 + [bootstrap](http://getbootstrap.com)
 
 ## Documentation
-use `KarstelCalendar(options)` to create a new calendar, where options can contain the following properties: 
+use `new KarstelCalendar(options)` to create a new calendar, where options can contain the following properties: 
 
 | property  | description           | default  |
 | ----- |--------|-------------|-----|
 | trigger| This property is mandatory. It defines the triggering element. Clicking this element triggers the widget. Widget appears next to the trigger element | |
-| daySelectCallback  | provide a callback function to handle the user selection. A moment date object with the selected date is passed to the callback and can be handled there | noop |
-| id | specify an ID for the calender widget | karstelCalendar |
-| header | specify the header text of the widget | Select date |
-| locale | specify the locale. The locale stems from moment.js, so the corresponding language files have to be present too! | en |
-| orientation | specify on which side of the trigger, the calendar is opened. Possible values: 'e' (east), 'w' (west), 'n' (north), 's' (south) | e |
+| daySelectCallback  | provide a callback function to handle the user selection. A moment date object with the selected date is passed to the callback and can be handled there | `function noop() {}` |
+| id | specify an ID for the calender widget | 'karstelCalendar' |
+| header | specify the header text of the widget | 'Select date' |
+| locale | specify the locale. The locale stems from moment.js, so the corresponding language files have to be present too! | 'en' |
+| orientation | specify on which side of the trigger, the calendar is opened. Possible values: 'e' (east), 'w' (west), 'n' (north), 's' (south) | 'e' |
 | startYear | year where the calendar starts  | current year |
 | endYear | year where the calendar ends | current year + 4 |
-| hideAfterSelect | determines whether the calendar should be closed after the user has selected a date | true |
+| hideAfterSelect | determines whether the calendar should be closed after the user has selected a date | `true` |
 
 ## Usage example
 ```javascript
