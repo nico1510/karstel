@@ -8,6 +8,7 @@ function KarstelCalendar(options) {
     var orientation = options.orientation || 'e';
     var startYear = options.startYear || moment().year();
     var endYear = options.endYear || moment().add(4, 'years').year();
+    var hideAfterSelect = options.hideAfterSelect || true;
 
     // the calendar jquery object
     var calendar;
@@ -15,6 +16,53 @@ function KarstelCalendar(options) {
     // todays date and time (initialized as soon as new KarstelCalendar() is created
     var date = moment().set('year', startYear).set('month', (options.startYear) ? 0 : moment().month());
     render(true);
+
+    self.hideCalendar = function() {
+        calendar.css('display', 'none');
+    };
+
+    // this handler function is invoked when the calendar-button (trigger) is pressed
+    self.showCalendar = function (ev) {
+        // change position to absolute and compute the position so that it is next to the calendar-button (trigger)
+        switch (orientation) {
+            case 'e':
+                calendar.css({
+                    position: 'absolute',
+                    left: trigger.offset().left + trigger.outerWidth() + 'px',
+                    top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
+                    display: 'block'
+                });
+                break;
+
+            case 'w':
+                calendar.css({
+                    position: 'absolute',
+                    left: trigger.offset().left - calendar.outerWidth() + 'px',
+                    top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
+                    display: 'block'
+                });
+                break;
+
+            case 'n':
+                calendar.css({
+                    position: 'absolute',
+                    left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
+                    top: trigger.offset().top - calendar.outerHeight() + 'px',
+                    display: 'block'
+                });
+                break;
+
+            case 's':
+                calendar.css({
+                    position: 'absolute',
+                    left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
+                    top: trigger.offset().top + trigger.outerHeight() + 'px',
+                    display: 'block'
+                });
+                break;
+        }
+        calendar.focus();
+    };
 
     self.__defineGetter__("trigger", function () {
         return setTrigger;
@@ -172,6 +220,23 @@ function KarstelCalendar(options) {
         setEndYear(val);
     });
 
+    self.__defineGetter__("hideAfterSelect", function () {
+        return setHideAfterSelect;
+    });
+
+    function setHideAfterSelect(val) {
+        if (val !== undefined) {
+            hideAfterSelect = val;
+            return self;
+        } else {
+            return hideAfterSelect;
+        }
+    }
+
+    self.__defineSetter__("hideAfterSelect", function (val) {
+        setHideAfterSelect(val);
+    });
+
     // generate the cells of a calendar (the individual days) based on a specific date
     function generateCalendarCells() {
         //++++++ generation of various handler functions which are used for the cells ++++++
@@ -227,7 +292,9 @@ function KarstelCalendar(options) {
                 cell.hover(hoverIn, hoverOutFunction);
                     cell.click(function executeCallbackAndHideCalendar(calendarCell, day) {
                         daySelectCallback(calendarCell, day);
-                        calendar.css('display', 'none');
+                        if(hideAfterSelect) {
+                            self.hideCalendar();
+                        }
                     }.bind(cell, moment(d)));
                 trow.append(cell);
             }
@@ -352,52 +419,9 @@ function KarstelCalendar(options) {
         return yearList;
     }
 
-    // this handler function is invoked when the calendar-button (trigger) is pressed
-    function showCalendar(ev) {
-        // change position to absolute and compute the position so that it is next to the calendar-button (trigger)
-        switch (orientation) {
-            case 'e':
-                calendar.css({
-                    position: 'absolute',
-                    left: trigger.offset().left + trigger.outerWidth() + 'px',
-                    top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
-                    display: 'block'
-                });
-                break;
-
-            case 'w':
-                calendar.css({
-                    position: 'absolute',
-                    left: trigger.offset().left - calendar.outerWidth() + 'px',
-                    top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
-                    display: 'block'
-                });
-                break;
-
-            case 'n':
-                calendar.css({
-                    position: 'absolute',
-                    left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
-                    top: trigger.offset().top - calendar.outerHeight() + 'px',
-                    display: 'block'
-                });
-                break;
-
-            case 's':
-                calendar.css({
-                    position: 'absolute',
-                    left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
-                    top: trigger.offset().top + trigger.outerHeight() + 'px',
-                    display: 'block'
-                });
-                break;
-        }
-        calendar.focus();
-    }
-
     // this handler function is invoked when the calendar looses focus (e.g. a click on another component other than
     // the calendar. Display 'none' makes the calendar invisible
-    function hideCalendar(ev) {
+    function hideCalendarOnFocusOut(ev) {
         // this (the use of setTimeout) is an ugly hack but it's not possible any other way...
         setTimeout(function () {
             var target = document.activeElement;
@@ -427,9 +451,9 @@ function KarstelCalendar(options) {
         return tableHeader;
     }
 
-    // When the calendar looses focus invoke the hideCalendar handler which is defined above
-    calendar.focusout(hideCalendar);
+    // When the calendar looses focus invoke the hideCalendarOnFocusOut handler which is defined above
+    calendar.focusout(hideCalendarOnFocusOut);
 
     // trigger stands for the calendar-button. Register the showCalendar event handler with the click event of this button
-    trigger.click(showCalendar);
+    trigger.click(self.showCalendar);
 }
