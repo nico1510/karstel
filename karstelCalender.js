@@ -1,80 +1,176 @@
 function KarstelCalendar(options) {
     var self = this;
-    self.trigger = options.trigger;
-    self.daySelectCallback = options.daySelectCallback || function noop() {};
-    self.id = options.id || 'karstelCalendar';
-    self.header = options.header || 'Select date';
-    self.locale = options.locale || 'en';
-    self.orientation = options.orientation || 'e';
-    self.startYear = options.startYear || moment().year();
-    self.endYear = options.endYear || moment().add(4, 'years').year();
+    var trigger = options.trigger;
+    var daySelectCallback = options.daySelectCallback || function noop() {};
+    var id = options.id || 'karstelCalendar';
+    var header = options.header || 'Select date';
+    var locale = options.locale || 'en';
+    var orientation = options.orientation || 'e';
+    var startYear = options.startYear || moment().year();
+    var endYear = options.endYear || moment().add(4, 'years').year();
 
     // the calendar jquery object
     var calendar;
-    moment.locale(self.locale);
+    moment.locale(locale);
     // todays date and time (initialized as soon as new KarstelCalendar() is created
-    var date = moment().set('year', self.startYear).set('month', (options.startYear) ? 0 : moment().month());
+    var date = moment().set('year', startYear).set('month', (options.startYear) ? 0 : moment().month());
     render(true);
 
-    self.setTrigger = function (trigger) {
-        self.trigger = trigger;
-        return self;
-    };
+    self.__defineGetter__("trigger", function () {
+        return setTrigger;
+    });
 
-    self.setDaySelectCallback = function (daySelectCallback) {
-        self.daySelectCallback = daySelectCallback;
-        updateCalendar();
-        return self;
-    };
-
-    self.setId = function (id) {
-        self.id = id;
-        calendar.attr('id', self.id);
-        return self;
-    };
-
-    self.setHeader = function (header) {
-        self.header = header;
-        calendar.find('h3').html(self.header);
-        return self;
-    };
-
-    self.setLocale = function (locale) {
-        self.locale = locale;
-        date.locale(self.locale);
-        moment.locale(self.locale);
-        calendar.find('.month-dropdown ul').html(generateMonthDropdown());
-        calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
-        updateCalendar();
-        return self;
-    };
-
-    self.setOrientation = function (orientation) {
-        //FIXME: doesn't work yet
-        self.orientation = orientation;
-        render(false);
-        return self;
-    };
-
-    self.setStartYear = function (startYear) {
-        self.startYear = startYear;
-        if (date.get('year') < startYear) {
-            date.set('year', startYear);
-            calendar.find('.year-dropdown .current-year').html(date.year());
+    function setTrigger(val) {
+        if (val !== undefined) {
+            trigger = val;
+            return self;
+        } else {
+            return trigger;
         }
-        calendar.find('.year-dropdown ul').html(generateYearDropdown(self.startYear, self.endYear));
-        return self;
-    };
+    }
 
-    self.setEndYear = function (endYear) {
-        self.endYear = endYear;
-        if (date.get('year') > endYear) {
-            date.set('year', endYear);
-            calendar.find('.year-dropdown .current-year').html(date.year());
+    self.__defineSetter__("trigger", function (val) {
+        setTrigger(val);
+    });
+
+    self.__defineGetter__("daySelectCallback", function () {
+        return setDaySelectCallback;
+    });
+
+    function setDaySelectCallback(val) {
+        if (val !== undefined) {
+            daySelectCallback = val;
+            updateCalendar();
+            return self;
+        } else {
+            return daySelectCallback;
         }
-        calendar.find('.year-dropdown ul').html(generateYearDropdown(self.startYear, self.endYear));
-        return self;
-    };
+    }
+
+    self.__defineSetter__("daySelectCallback", function (val) {
+        setDaySelectCallback(val);
+    });
+
+    self.__defineGetter__("id", function () {
+        return setId;
+    });
+
+    function setId(val) {
+        if (val !== undefined) {
+            id = val;
+            calendar.attr('id', val);
+            return self;
+        } else {
+            return id;
+        }
+    }
+
+    self.__defineSetter__("id", function (val) {
+        setId(val);
+    });
+
+    self.__defineGetter__("header", function () {
+        return setHeader;
+    });
+
+    function setHeader(val) {
+        if (val !== undefined) {
+            header = val;
+            calendar.find('h3').html(header);
+            return self;
+        } else {
+            return header;
+        }
+    }
+
+    self.__defineSetter__("header", function (val) {
+        setHeader(val);
+    });
+
+    self.__defineGetter__("locale", function () {
+        return setLocale;
+    });
+
+    function setLocale(val) {
+        if (val !== undefined) {
+            locale = val;
+            date.locale(locale);
+            moment.locale(locale);
+            calendar.find('.month-dropdown ul').html(generateMonthDropdown());
+            calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
+            updateCalendar();
+            return self;
+        } else {
+            return locale;
+        }
+    }
+
+    self.__defineSetter__("locale", function (val) {
+        setLocale(val);
+    });
+
+    self.__defineGetter__("orientation", function () {
+        return setOrientation;
+    });
+
+    function setOrientation(orientation) {
+        if (val !== undefined) {
+            //FIXME: doesn't work yet
+            orientation = orientation;
+            render(false);
+            return self;
+        } else {
+            return orientation;
+        }
+    }
+
+    self.__defineSetter__("orientation", function (val) {
+        setOrientation(val);
+    });
+
+    self.__defineGetter__("startYear", function () {
+        return setStartYear;
+    });
+
+    function setStartYear(val) {
+        if (val !== undefined) {
+            startYear = val;
+            if (date.get('year') < startYear) {
+                date.set('year', startYear);
+                calendar.find('.year-dropdown .current-year').html(date.year());
+            }
+            calendar.find('.year-dropdown ul').html(generateYearDropdown(startYear, endYear));
+            return self;
+        } else {
+            return startYear;
+        }
+    }
+
+    self.__defineSetter__("startYear", function (val) {
+        setStartYear(val);
+    });
+
+    self.__defineGetter__("endYear", function () {
+        return setEndYear;
+    });
+
+    function setEndYear(val) {
+        if (val !== undefined) {
+            endYear = val;
+            if (date.get('year') > endYear) {
+                date.set('year', endYear);
+                calendar.find('.year-dropdown .current-year').html(date.year());
+            }
+            calendar.find('.year-dropdown ul').html(generateYearDropdown(startYear, endYear));
+            return self;
+        } else {
+            return endYear;
+        }
+    }
+
+    self.__defineSetter__("endYear", function (val) {
+        setEndYear(val);
+    });
 
     // generate the cells of a calendar (the individual days) based on a specific date
     function generateCalendarCells() {
@@ -134,7 +230,7 @@ function KarstelCalendar(options) {
                         theCallBack(calendarCell, day);
                         calendar.css('display', 'none');
                     }.bind(cell, moment(d)));
-                })(self.daySelectCallback);
+                })(daySelectCallback);
                 trow.append(cell);
             }
             tbody.append(trow);
@@ -147,7 +243,7 @@ function KarstelCalendar(options) {
     // this method is invoked as soon as new KarstelCalendar() is created
     function render(init) {
         var arrowPos;
-        switch (self.orientation) {
+        switch (orientation) {
             case 'e':
                 arrowPos = 'right';
                 break;
@@ -190,10 +286,10 @@ function KarstelCalendar(options) {
                     </div>";
 
         calendar = $($.parseHTML(templateString));
-        calendar.attr('id', self.id);
-        calendar.find('h3').html(self.header);
+        calendar.attr('id', id);
+        calendar.find('h3').html(header);
         calendar.find('.month-dropdown ul').append(generateMonthDropdown());
-        calendar.find('.year-dropdown ul').append(generateYearDropdown(self.startYear, self.endYear));
+        calendar.find('.year-dropdown ul').append(generateYearDropdown(startYear, endYear));
         calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
         if (init) {
             calendar.appendTo('body');
@@ -217,9 +313,9 @@ function KarstelCalendar(options) {
                         role: 'menuitem'
                     }).html(monthName)
                         .click(function selectMonth() {
-                        date.month(index);
-                        updateCalendar();
-                    })
+                            date.month(index);
+                            updateCalendar();
+                        })
                 )
             );
         });
@@ -261,12 +357,12 @@ function KarstelCalendar(options) {
     // this handler function is invoked when the calendar-button (trigger) is pressed
     function showCalendar(ev) {
         // change position to absolute and compute the position so that it is next to the calendar-button (trigger)
-        switch (self.orientation) {
+        switch (orientation) {
             case 'e':
                 calendar.css({
                     position: 'absolute',
-                    left: self.trigger.offset().left + self.trigger.outerWidth() + 'px',
-                    top: self.trigger.offset().top + (0.5 * self.trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
+                    left: trigger.offset().left + trigger.outerWidth() + 'px',
+                    top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
                     display: 'block'
                 });
                 break;
@@ -274,8 +370,8 @@ function KarstelCalendar(options) {
             case 'w':
                 calendar.css({
                     position: 'absolute',
-                    left: self.trigger.offset().left - calendar.outerWidth() + 'px',
-                    top: self.trigger.offset().top + (0.5 * self.trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
+                    left: trigger.offset().left - calendar.outerWidth() + 'px',
+                    top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
                     display: 'block'
                 });
                 break;
@@ -283,8 +379,8 @@ function KarstelCalendar(options) {
             case 'n':
                 calendar.css({
                     position: 'absolute',
-                    left: self.trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * self.trigger.outerWidth()) + 'px',
-                    top: self.trigger.offset().top - calendar.outerHeight() + 'px',
+                    left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
+                    top: trigger.offset().top - calendar.outerHeight() + 'px',
                     display: 'block'
                 });
                 break;
@@ -292,8 +388,8 @@ function KarstelCalendar(options) {
             case 's':
                 calendar.css({
                     position: 'absolute',
-                    left: self.trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * self.trigger.outerWidth()) + 'px',
-                    top: self.trigger.offset().top + self.trigger.outerHeight() + 'px',
+                    left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
+                    top: trigger.offset().top + trigger.outerHeight() + 'px',
                     display: 'block'
                 });
                 break;
@@ -337,5 +433,5 @@ function KarstelCalendar(options) {
     calendar.focusout(hideCalendar);
 
     // trigger stands for the calendar-button. Register the showCalendar event handler with the click event of this button
-    self.trigger.click(showCalendar);
+    trigger.click(showCalendar);
 }
