@@ -241,6 +241,24 @@ function KarstelCalendar(options) {
         setHideAfterSelect(val);
     });
 
+    self.__defineGetter__("date", function () {
+        return setDate;
+    });
+
+    function setDate(val) {
+        if (val !== undefined) {
+            date = val;
+            updateCalendar();
+            return self;
+        } else {
+            return date;
+        }
+    }
+
+    self.__defineSetter__("date", function (val) {
+        setDate(val);
+    });
+
     // generate the cells of a calendar (the individual days) based on a specific date
     function generateCalendarCells() {
         //++++++ generation of various handler functions which are used for the cells ++++++
@@ -270,9 +288,11 @@ function KarstelCalendar(options) {
         var tbody = $('<tbody></tbody>').css(unselectableText);
         var trow;
         var cell;
-        var w = moment(date.startOf('month'));
+
+        var w = moment(date).startOf('month');
+
         var firstWeek = true;
-        while (w < date.endOf('month')) {
+        while (w < moment(date).endOf('month')) {
             if (firstWeek) {
                 firstWeek = false;
             } else {
@@ -283,7 +303,7 @@ function KarstelCalendar(options) {
             for (var d = moment(w.startOf('isoWeek')); d <= w.endOf('isoWeek'); d.add(1, 'days')) {
                 // for every day in the week create a new table cell
                 cell = $('<td></td>').html(d.format('DD'));
-                if (d < date.startOf('month') || d > date.endOf('month')) {
+                if (d < moment(date).startOf('month') || d > moment(date).endOf('month')) {
                     cell.css('color', 'Gainsboro');
                 } else if (d.isSame(new Date(), "day")) {
                     cell.css({
@@ -306,6 +326,7 @@ function KarstelCalendar(options) {
         }
         return tbody;
     }
+
 
     function getArrowPos (orientation) {
         var arrowPos;
