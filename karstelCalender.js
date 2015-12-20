@@ -15,7 +15,7 @@ function KarstelCalendar(options) {
     moment.locale(locale);
     // todays date and time (initialized as soon as new KarstelCalendar() is created
     var date = moment().set('year', startYear).set('month', (options.startYear) ? 0 : moment().month());
-    render(true);
+    render();
 
     self.hideCalendar = function() {
         calendar.css('display', 'none');
@@ -163,9 +163,13 @@ function KarstelCalendar(options) {
 
     function setOrientation(val) {
         if (val !== undefined) {
-            //FIXME: doesn't work yet
+            var oldClass = getArrowPos(orientation);
+            var newClass = getArrowPos(val);
             orientation = val;
-            render(false);
+            calendar.removeClass(oldClass).addClass(newClass);
+            if(calendar.is(":visible")) {
+                self.showCalendar();
+            }
             return self;
         } else {
             return orientation;
@@ -303,11 +307,9 @@ function KarstelCalendar(options) {
         return tbody;
     }
 
-    // create a clone from the html element with id calendar-template with a new id
-    // and fill the calendar content table with table header and table body
-    // this method is invoked as soon as new KarstelCalendar() is created
-    function render(init) {
+    function getArrowPos (orientation) {
         var arrowPos;
+
         switch (orientation) {
             case 'e':
                 arrowPos = 'right';
@@ -321,8 +323,16 @@ function KarstelCalendar(options) {
             case 's':
                 arrowPos = 'bottom';
                 break;
-
         }
+
+        return arrowPos;
+    }
+
+    // create a clone from the html element with id calendar-template with a new id
+    // and fill the calendar content table with table header and table body
+    // this method is invoked as soon as new KarstelCalendar() is created
+    function render() {
+        var arrowPos = getArrowPos(orientation);
 
         /*jshint multistr: true */
         var templateString = "<div id='calendar-template' tabindex='0' class='popover " + arrowPos + "' role='tooltip' style='display: none; outline: none'> "
@@ -356,9 +366,8 @@ function KarstelCalendar(options) {
         calendar.find('.month-dropdown ul').css('min-width', '0px').html(generateMonthDropdown());
         calendar.find('.year-dropdown ul').css('min-width', '0px').html(generateYearDropdown(startYear, endYear));
         calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
-        if (init) {
-            calendar.appendTo('body');
-        }
+        calendar.appendTo('body');
+
         updateCalendar();
     }
 
