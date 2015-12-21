@@ -17,7 +17,7 @@ function KarstelCalendar(options) {
     var date = moment().set('year', startYear).set('month', (options.startYear) ? 0 : moment().month());
     render();
 
-    self.hideCalendar = function() {
+    self.hideCalendar = function () {
         calendar.css('display', 'none');
     };
 
@@ -167,7 +167,7 @@ function KarstelCalendar(options) {
             var newClass = getArrowPos(val);
             orientation = val;
             calendar.removeClass(oldClass).addClass(newClass);
-            if(calendar.is(":visible")) {
+            if (calendar.is(":visible")) {
                 self.showCalendar();
             }
             return self;
@@ -314,12 +314,12 @@ function KarstelCalendar(options) {
                 // now assign the handler functions which are defined above to the cell
                 hoverOutFunction = hoverOut('White');
                 cell.hover(hoverIn, hoverOutFunction);
-                    cell.click(function executeCallbackAndHideCalendar(calendarCell, day) {
-                        daySelectCallback(calendarCell, day);
-                        if(hideAfterSelect) {
-                            self.hideCalendar();
-                        }
-                    }.bind(cell, moment(d)));
+                cell.click(function executeCallbackAndHideCalendar(calendarCell, day) {
+                    daySelectCallback(calendarCell, day);
+                    if (hideAfterSelect) {
+                        self.hideCalendar();
+                    }
+                }.bind(cell, moment(d)));
                 trow.append(cell);
             }
             tbody.append(trow);
@@ -328,7 +328,7 @@ function KarstelCalendar(options) {
     }
 
 
-    function getArrowPos (orientation) {
+    function getArrowPos(orientation) {
         var arrowPos;
 
         switch (orientation) {
@@ -385,7 +385,13 @@ function KarstelCalendar(options) {
         calendar.attr('id', id);
         calendar.find('h3').html(header);
         calendar.find('.month-dropdown ul').css('min-width', '0px').html(generateMonthDropdown());
-        calendar.find('.year-dropdown ul').css('min-width', '0px').html(generateYearDropdown(startYear, endYear));
+        calendar.find('.year-dropdown ul').css({
+            'min-width': '0px',
+            'height': 'auto',
+            'max-height': '200px',
+            'overflow-x': 'hidden',
+            'padding-right': '10px'
+        }).html(generateYearDropdown(startYear, endYear));
         calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
         calendar.appendTo('body');
 
