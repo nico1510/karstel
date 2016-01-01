@@ -425,14 +425,17 @@ function KarstelCalendar(options) {
     }
 
     // returns a closed interval from start to end
-    function getClosedInterval(start, end) {
-        var interval = new Array(end - start);
-
-        for (var i = start; i <= end; i++) {
+    function closedInterval(start, end) {
+        if (start > end) { return []; }
+        end++;
+        var interval = [];
+        var i = start;
+        do {
             interval[i - start] = i;
-        }
+            i++;
+        } while (i < end);
         return interval;
-    }
+    };
 
 
     function generateYearDropdown(startYear, endYear) {
@@ -440,7 +443,7 @@ function KarstelCalendar(options) {
             throw Error('startYear must be smaller than endYear');
         }
         var yearList = $();
-        var nextYears = getClosedInterval(startYear, endYear);
+        var nextYears = closedInterval(startYear, endYear);
 
         nextYears.forEach(function (year) {
             yearList = yearList.add($('<li />', {
