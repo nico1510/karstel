@@ -8,7 +8,7 @@ function KarstelCalendar(options) {
     var orientation = options.orientation || 'e';
     var startYear = options.startYear || moment().year();
     var endYear = options.endYear || moment().add(4, 'years').year();
-    var hideAfterSelect = options.hideAfterSelect || true;
+    var hideAfterSelect = (options.hideAfterSelect === undefined) || options.hideAfterSelect;
 
     // the calendar jquery object
     var calendar;
@@ -291,13 +291,7 @@ function KarstelCalendar(options) {
 
         var w = moment(date).startOf('month');
 
-        var firstWeek = true;
-        while (w < moment(date).endOf('month')) {
-            if (firstWeek) {
-                firstWeek = false;
-            } else {
-                w.add(1, 'weeks');
-            }
+        for (var weekCount=0; weekCount < 6; weekCount++) {
             // for every week add a new table row
             trow = $('<tr></tr>');
             for (var d = moment(w.startOf('isoWeek')); d <= w.endOf('isoWeek'); d.add(1, 'days')) {
@@ -323,6 +317,7 @@ function KarstelCalendar(options) {
                 trow.append(cell);
             }
             tbody.append(trow);
+            w.add(1, 'weeks');
         }
         return tbody;
     }
