@@ -1,16 +1,9 @@
-// module pattern copied from https://github.com/umdjs/umd/blob/master/templates/returnExportsGlobal.js
+// module pattern copied from https://github.com/umdjs/umd/blob/master/templates/amdWebGlobal.js
 
 ;(function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['jquery', 'moment'], function ($, moment) {
-            return (root.KarstelCalendar = factory($, moment));
-        });
-    } else if (typeof module === 'object' && module.exports) {
-        // Node. Does not work with strict CommonJS, but
-        // only CommonJS-like enviroments that support module.exports,
-        // like Node.
-        module.exports = factory(require('jQuery'), require('moment'));
+        define(['jquery', 'moment'], factory);
     } else {
         // Browser globals
         root.KarstelCalendar = factory(root.jQuery, root.moment);
