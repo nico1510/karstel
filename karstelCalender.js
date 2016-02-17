@@ -473,7 +473,7 @@
                 var target = document.activeElement;
                 if (target !== null) {
                     if (calendar.get(0) !== target && calendar.has(target).length === 0) {
-                        calendar.css('display', 'none');
+                        self.hideCalendar();
                     }
                 }
             }, 1);
