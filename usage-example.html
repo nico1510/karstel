@@ -30,14 +30,16 @@
 
         var options = {
             trigger: $('#myButtonId'),
-            daySelectCallback: function onDaySelect(d) {
-                console.log(d.format('dddd, LL'));
+            daySelectCallback: function onDaySelect(day, ev) {
+                console.log('date: ' + day.format('LLLL'));
+                console.log('cell: ' + this);
+                console.log('event: ' + ev);
             },
             id: 'myCalenderId',
             header: 'Pick a date',
             locale: 'en',
             orientation: 'e',
-            startYear: 2005
+            startYear: 2011
         };
 
         var startCal = new KarstelCalendar(options);

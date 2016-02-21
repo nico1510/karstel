@@ -22,7 +22,7 @@
         var locale = options.locale || 'en';
         var orientation = options.orientation || 'e';
         var startYear = options.startYear || moment().year();
-        var endYear = options.endYear || moment().add(4, 'years').year();
+        var endYear = options.endYear || moment().year() + 4;
         var hideAfterSelect = (options.hideAfterSelect === undefined) || options.hideAfterSelect;
 
         // the calendar jquery object
@@ -323,8 +323,8 @@
                     // now assign the handler functions which are defined above to the cell
                     hoverOutFunction = hoverOut('White');
                     cell.hover(hoverIn, hoverOutFunction);
-                    cell.click(function executeCallbackAndHideCalendar(calendarCell, day) {
-                        daySelectCallback(calendarCell, day);
+                    cell.click(function executeCallbackAndHideCalendar(day, ev) {
+                        daySelectCallback.bind(this)(day, ev);
                         if (hideAfterSelect) {
                             self.hideCalendar();
                         }
