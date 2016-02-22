@@ -366,30 +366,30 @@
             var arrowPos = getArrowPos(orientation);
 
             /*jshint multistr: true */
-            var templateString = "<div id='calendar-template' tabindex='0' class='popover " + arrowPos + "' role='tooltip' style='display: none; outline: none'> "
-                + "<div class='arrow'></div>                                                                                                   \
-                        <h3 class='popover-title'></h3>                                                                                             \
-                        <div class='dropdown month-dropdown pull-left'>                                                                             \
-                        <button class='btn btn-default dropdown-toggle' style='border: none; background-color: #fff' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
-                        <span class='current-month'></span>                                                                                         \
-                        <span class='caret'></span>                                                                                                 \
-                        </button>                                                                                                                   \
-                        <ul class='dropdown-menu' role='menu'></ul>                                                                                 \
-                        </div>                                                                                                                      \
-                        <div class='dropdown year-dropdown pull-right'>                                                                             \
-                        <button class='btn btn-default dropdown-toggle' style='border: none; background-color: #fff' type='button' data-toggle='dropdown' aria-expanded='true'>                  \
-                        <span class='current-year'></span>                                                                                          \
-                        <span class='caret'></span>                                                                                                 \
-                        </button>                                                                                                                   \
-                        <ul class='dropdown-menu' role='menu'></ul>                                                                                 \
-                        </div>                                                                                                                      \
-                        <div class='calendar-content popover-content'>                                                                              \
-                        <table class='table calendar-table'>                                                                                        \
-                        <thead></thead>                                                                                                             \
-                        <tbody></tbody>                                                                                                             \
-                        </table>                                                                                                                    \
-                        </div>                                                                                                                      \
-                        </div>";
+            var templateString = `<div id='calendar-template' tabindex='0' class='popover " + arrowPos + "' role='tooltip' style='display: none; outline: none'>
+                        <div class='arrow'></div>
+                        <h3 class='popover-title'></h3>
+                        <div class='dropdown month-dropdown pull-left'>
+                        <button class='btn btn-default dropdown-toggle' style='border: none; background-color: #fff' type='button' data-toggle='dropdown' aria-expanded='true'>
+                        <span class='current-month'></span>
+                        <span class='caret'></span>
+                        </button>
+                        <ul class='dropdown-menu' role='menu'></ul>
+                        </div>
+                        <div class='dropdown year-dropdown pull-right'>
+                        <button class='btn btn-default dropdown-toggle' style='border: none; background-color: #fff' type='button' data-toggle='dropdown' aria-expanded='true'>
+                        <span class='current-year'></span>
+                        <span class='caret'></span>
+                        </button>
+                        <ul class='dropdown-menu' role='menu'></ul>
+                        </div>
+                        <div class='calendar-content popover-content'>
+                        <table class='table calendar-table'>
+                        <thead></thead>
+                        <tbody></tbody>
+                        </table>
+                        </div>
+                        </div>`;
 
             calendar = $($.parseHTML(templateString));
             calendar.attr('id', id);
@@ -421,12 +421,12 @@
                 monthList = monthList.add($('<li />', {
                         role: 'presentation'
                     }).append($('<a />', {
-                            role: 'menuitem'
-                        }).html(monthName)
-                            .click(function selectMonth() {
-                                date.month(index);
-                                updateCalendar();
-                            })
+                        role: 'menuitem'
+                    }).html(monthName)
+                    .click(function selectMonth() {
+                        date.month(index);
+                        updateCalendar();
+                    })
                     )
                 );
             });
