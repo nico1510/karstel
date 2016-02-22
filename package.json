@@ -1,0 +1,30 @@
+{
+  "name": "karstel",
+  "version": "0.0.1",
+  "description": "A simple javascript calendar widget with bootstrap",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nico1510/karstel.git"
+  },
+  "keywords": [
+    "calendar",
+    "bootstrap",
+    "datepicker",
+    "moment"
+  ],
+  "author": "Nicolas Beck",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nico1510/karstel/issues"
+  },
+  "homepage": "https://github.com/nico1510/karstel#readme",
+  "devDependencies": {
+    "mocha": "^2.4.5"
+  }
+}
