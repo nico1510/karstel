@@ -21,6 +21,8 @@ use `new KarstelCalendar(options)` to create a new calendar, where options can c
 | hideAfterSelect | determines whether the calendar should be closed after the user has selected a date | `true` |
 
 ## Usage example
+For an example of how to use the calendar in a html page see [usage-example.html](https://github.com/nico1510/karstel/blob/master/usage-example.html). If you are using [RequireJS](http://requirejs.org/) you can also require the calendar as an AMD module. The following code snippet creates a new calendar with some optional settings. Note that only the `trigger` property is required.
+
 ```javascript
  var options = {
      trigger: $('#myButtonId'),
