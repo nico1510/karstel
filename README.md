@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nico1510/karstel.svg?branch=master)](https://travis-ci.org/nico1510/karstel)
+
 # A simple javascript calender widget with bootstrap
 ## Dependencies
 + [moment.js](http://momentjs.com)

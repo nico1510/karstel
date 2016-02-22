@@ -6,7 +6,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npm test"
+    "postinstall": "bower install",
+    "test": "./node_modules/karma/bin/karma start ./test/karma.conf.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,13 @@
   },
   "homepage": "https://github.com/nico1510/karstel#readme",
   "devDependencies": {
+    "bower": "^1.7.7",
+    "chai": "^3.5.0",
+    "karma": "^0.13.21",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-mocha": "^0.2.2",
     "mocha": "^2.4.5"
   }
 }
