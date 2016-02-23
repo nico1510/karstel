@@ -41,8 +41,9 @@ For an example of how to use the calendar in a html page see [usage-example.html
 options can also be changed via setters after the object is instantiated: 
 
 ```javascript
- startCal.header = 'The new header text';
- 
+ startCal.locale('de');
+ startCal.header('Datum');
+  
  // or with chainable setters
  startCal.locale('de').header('Datum');
 ```
