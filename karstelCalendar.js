@@ -32,6 +32,122 @@
         var date = moment().set('year', startYear).set('month', (options.startYear) ? 0 : moment().month());
         render();
 
+        self.trigger = function (val) {
+            if (val !== undefined) {
+                trigger = val;
+                return self;
+            } else {
+                return trigger;
+            }
+        };
+
+
+        self.daySelectCallback = function (val) {
+            if (val !== undefined) {
+                daySelectCallback = val;
+                updateCalendar();
+                return self;
+            } else {
+                return daySelectCallback;
+            }
+        };
+
+        self.id = function (val) {
+            if (val !== undefined) {
+                id = val;
+                calendar.attr('id', val);
+                return self;
+            } else {
+                return id;
+            }
+        };
+
+        self.header = function (val) {
+            if (val !== undefined) {
+                header = val;
+                calendar.find('h3').html(header);
+                return self;
+            } else {
+                return header;
+            }
+        };
+
+        self.locale = function (val) {
+            if (val !== undefined) {
+                locale = val;
+                date.locale(locale);
+                moment.locale(locale);
+                calendar.find('.month-dropdown ul').html(generateMonthDropdown());
+                calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
+                updateCalendar();
+                return self;
+            } else {
+                return locale;
+            }
+        };
+
+        self.orientation = function (val) {
+            if (val !== undefined) {
+                var oldClass = getArrowPos(orientation);
+                var newClass = getArrowPos(val);
+                orientation = val;
+                calendar.removeClass(oldClass).addClass(newClass);
+                if (calendar.is(":visible")) {
+                    self.showCalendar();
+                }
+                return self;
+            } else {
+                return orientation;
+            }
+        };
+
+        self.startYear = function (val) {
+            if (val !== undefined) {
+                startYear = val;
+                if (date.get('year') < startYear) {
+                    date.set('year', startYear);
+                    calendar.find('.year-dropdown .current-year').html(date.year());
+                }
+                calendar.find('.year-dropdown ul').html(generateYearDropdown(startYear, endYear));
+                return self;
+            } else {
+                return startYear;
+            }
+        };
+
+        self.endYear = function (val) {
+            if (val !== undefined) {
+                endYear = val;
+                if (date.get('year') > endYear) {
+                    date.set('year', endYear);
+                    calendar.find('.year-dropdown .current-year').html(date.year());
+                }
+                calendar.find('.year-dropdown ul').html(generateYearDropdown(startYear, endYear));
+                return self;
+            } else {
+                return endYear;
+            }
+        };
+
+        self.hideAfterSelect = function (val) {
+            if (val !== undefined) {
+                hideAfterSelect = val;
+                return self;
+            } else {
+                return hideAfterSelect;
+            }
+        };
+
+        self.date = function (val) {
+            if (val !== undefined) {
+                date = val;
+                updateCalendar();
+                return self;
+            } else {
+                return date;
+            }
+        };
+
         self.hideCalendar = function () {
             calendar.css('display', 'none');
         };
@@ -78,201 +194,6 @@
             }
             calendar.focus();
         };
-
-        self.__defineGetter__("trigger", function () {
-            return setTrigger;
-        });
-
-        function setTrigger(val) {
-            if (val !== undefined) {
-                trigger = val;
-                return self;
-            } else {
-                return trigger;
-            }
-        }
-
-        self.__defineSetter__("trigger", function (val) {
-            setTrigger(val);
-        });
-
-        self.__defineGetter__("daySelectCallback", function () {
-            return setDaySelectCallback;
-        });
-
-        function setDaySelectCallback(val) {
-            if (val !== undefined) {
-                daySelectCallback = val;
-                updateCalendar();
-                return self;
-            } else {
-                return daySelectCallback;
-            }
-        }
-
-        self.__defineSetter__("daySelectCallback", function (val) {
-            setDaySelectCallback(val);
-        });
-
-        self.__defineGetter__("id", function () {
-            return setId;
-        });
-
-        function setId(val) {
-            if (val !== undefined) {
-                id = val;
-                calendar.attr('id', val);
-                return self;
-            } else {
-                return id;
-            }
-        }
-
-        self.__defineSetter__("id", function (val) {
-            setId(val);
-        });
-
-        self.__defineGetter__("header", function () {
-            return setHeader;
-        });
-
-        function setHeader(val) {
-            if (val !== undefined) {
-                header = val;
-                calendar.find('h3').html(header);
-                return self;
-            } else {
-                return header;
-            }
-        }
-
-        self.__defineSetter__("header", function (val) {
-            setHeader(val);
-        });
-
-        self.__defineGetter__("locale", function () {
-            return setLocale;
-        });
-
-        function setLocale(val) {
-            if (val !== undefined) {
-                locale = val;
-                date.locale(locale);
-                moment.locale(locale);
-                calendar.find('.month-dropdown ul').html(generateMonthDropdown());
-                calendar.find('.calendar-content .table thead').replaceWith(generateCalendarHeader());
-                updateCalendar();
-                return self;
-            } else {
-                return locale;
-            }
-        }
-
-        self.__defineSetter__("locale", function (val) {
-            setLocale(val);
-        });
-
-        self.__defineGetter__("orientation", function () {
-            return setOrientation;
-        });
-
-        function setOrientation(val) {
-            if (val !== undefined) {
-                var oldClass = getArrowPos(orientation);
-                var newClass = getArrowPos(val);
-                orientation = val;
-                calendar.removeClass(oldClass).addClass(newClass);
-                if (calendar.is(":visible")) {
-                    self.showCalendar();
-                }
-                return self;
-            } else {
-                return orientation;
-            }
-        }
-
-        self.__defineSetter__("orientation", function (val) {
-            setOrientation(val);
-        });
-
-        self.__defineGetter__("startYear", function () {
-            return setStartYear;
-        });
-
-        function setStartYear(val) {
-            if (val !== undefined) {
-                startYear = val;
-                if (date.get('year') < startYear) {
-                    date.set('year', startYear);
-                    calendar.find('.year-dropdown .current-year').html(date.year());
-                }
-                calendar.find('.year-dropdown ul').html(generateYearDropdown(startYear, endYear));
-                return self;
-            } else {
-                return startYear;
-            }
-        }
-
-        self.__defineSetter__("startYear", function (val) {
-            setStartYear(val);
-        });
-
-        self.__defineGetter__("endYear", function () {
-            return setEndYear;
-        });
-
-        function setEndYear(val) {
-            if (val !== undefined) {
-                endYear = val;
-                if (date.get('year') > endYear) {
-                    date.set('year', endYear);
-                    calendar.find('.year-dropdown .current-year').html(date.year());
-                }
-                calendar.find('.year-dropdown ul').html(generateYearDropdown(startYear, endYear));
-                return self;
-            } else {
-                return endYear;
-            }
-        }
-
-        self.__defineSetter__("endYear", function (val) {
-            setEndYear(val);
-        });
-
-        self.__defineGetter__("hideAfterSelect", function () {
-            return setHideAfterSelect;
-        });
-
-        function setHideAfterSelect(val) {
-            if (val !== undefined) {
-                hideAfterSelect = val;
-                return self;
-            } else {
-                return hideAfterSelect;
-            }
-        }
-
-        self.__defineSetter__("hideAfterSelect", function (val) {
-            setHideAfterSelect(val);
-        });
-
-        self.__defineGetter__("date", function () {
-            return setDate;
-        });
-
-        function setDate(val) {
-            if (val !== undefined) {
-                date = val;
-                updateCalendar();
-                return self;
-            } else {
-                return date;
-            }
-        }
-
-        self.__defineSetter__("date", function (val) {
-            setDate(val);
-        });
 
         // generate the cells of a calendar (the individual days) based on a specific date
         function generateCalendarCells() {
