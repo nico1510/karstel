@@ -4,7 +4,7 @@ describe("karstel calendar test suite", function () {
 
     before(function(){
         $('body').append($('<input type="text" id="triggerElement"/>'));
-        cal = new KarstelCalendar({trigger: $('#triggerElement')});
+        cal = new KarstelCalendar({triggerObject: $('#triggerElement')});
     });
 
     it('should have a default id', function () {
@@ -23,4 +23,12 @@ describe("karstel calendar test suite", function () {
         cal.hideCalendar();
         expect($('#karstelCalendar').is(":visible")).to.be.false;
     });
+
+    it('should open when the triggerObject is clicked', function () {
+        expect($('#karstelCalendar').is(":visible")).to.be.false;
+        cal.triggerObject().trigger('click');
+        expect($('#karstelCalendar').is(":visible")).to.be.true;
+    });
+
+    //TODO: test orientation with position, header, locale ...
 });
