@@ -10,22 +10,22 @@ use `new KarstelCalendar(options)` to create a new calendar, where options can c
 
 | property  | description           | default  |
 | ----- |--------|-------------|-----|
-| trigger| This property is mandatory. It defines the triggering element. Clicking this element triggers the widget. Widget appears next to the trigger element | |
+| triggerObject| This property is mandatory. It defines the triggering element. Clicking this element triggers the widget. Widget appears next to the trigger element | |
 | daySelectCallback  | provide a callback function to handle the user selection. A moment date object with the selected date is passed to the callback and can be handled there | `function noop() {}` |
 | id | specify an ID for the calender widget | 'karstelCalendar' |
 | header | specify the header text of the widget | 'Select date' |
 | locale | specify the locale. The locale stems from moment.js, so the corresponding language files have to be present too! | 'en' |
-| orientation | specify on which side of the trigger, the calendar is opened. Possible values: 'e' (east), 'w' (west), 'n' (north), 's' (south) | 'e' |
+| orientation | specify on which side of the triggerObject, the calendar is opened. Possible values: 'e' (east), 'w' (west), 'n' (north), 's' (south) | 'e' |
 | startYear | year where the calendar starts  | current year |
 | endYear | year where the calendar ends | current year + 4 |
 | hideAfterSelect | determines whether the calendar should be closed after the user has selected a date | `true` |
 
 ## Usage example
-For an example of how to use the calendar in a html page see [usage-example.html](https://github.com/nico1510/karstel/blob/master/usage-example.html). If you are using [RequireJS](http://requirejs.org/) you can also require the calendar as an AMD module. The following code snippet creates a new calendar with some optional settings. Note that only the `trigger` property is required.
+For an example of how to use the calendar in a html page see [usage-example.html](https://github.com/nico1510/karstel/blob/master/usage-example.html). If you are using [RequireJS](http://requirejs.org/) you can also require the calendar as an AMD module. The following code snippet creates a new calendar with some optional settings. Note that only the `triggerObject` property is required.
 
 ```javascript
  var options = {
-     trigger: $('#myButtonId'),
+     triggerObject: $('#myButtonId'),
      daySelectCallback: function onDaySelect(d) {
          console.log(d.format('dddd, LL'));
      },

@@ -15,7 +15,7 @@
 <script>
     $(document).ready(function () {
         var options = {
-            trigger: $('#myButtonId'),
+            triggerObject: $('#myButtonId'),
             daySelectCallback: function onDaySelect(day, ev) {
                 console.log('date: ' + day.format('LLLL'));
                 console.log('cell: ' + this);
@@ -28,7 +28,7 @@
             startYear: 2011
         };
 
-        var startCal = new KarstelCalendar(options);
+        window.myCal = new KarstelCalendar(options);
     });
 </script>
 </body>

@@ -3,18 +3,18 @@
 ;(function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['jquery', 'moment'], factory);
+        define(['jquery', 'moment', 'bootstrap'], factory);
     } else {
         // Browser globals
         root.KarstelCalendar = factory(root.jQuery, root.moment);
     }
-}(this, function ($, moment) {
+}(this, function ($, moment, bootstrap) {
 
     'use strict';
 
     function KarstelCalendar(options) {
         var self = this;
-        var trigger = options.trigger;
+        var triggerObject = options.triggerObject;
         var daySelectCallback = options.daySelectCallback || function noop() {
             };
         var id = options.id || 'karstelCalendar';
@@ -32,12 +32,12 @@
         var date = moment().set('year', startYear).set('month', (options.startYear) ? 0 : moment().month());
         render();
 
-        self.trigger = function (val) {
+        self.triggerObject = function (val) {
             if (val !== undefined) {
-                trigger = val;
+                triggerObject = val;
                 return self;
             } else {
-                return trigger;
+                return triggerObject;
             }
         };
 
@@ -152,15 +152,15 @@
             calendar.css('display', 'none');
         };
 
-        // this handler function is invoked when the calendar-button (trigger) is pressed
+        // this handler function is invoked when the calendar-button (triggerObject) is pressed
         self.showCalendar = function (ev) {
-            // change position to absolute and compute the position so that it is next to the calendar-button (trigger)
+            // change position to absolute and compute the position so that it is next to the calendar-button (triggerObject)
             switch (orientation) {
                 case 'e':
                     calendar.css({
                         position: 'absolute',
-                        left: trigger.offset().left + trigger.outerWidth() + 'px',
-                        top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
+                        left: triggerObject.offset().left + triggerObject.outerWidth() + 'px',
+                        top: triggerObject.offset().top + (0.5 * triggerObject.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
                         display: 'block'
                     });
                     break;
@@ -168,8 +168,8 @@
                 case 'w':
                     calendar.css({
                         position: 'absolute',
-                        left: trigger.offset().left - calendar.outerWidth() + 'px',
-                        top: trigger.offset().top + (0.5 * trigger.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
+                        left: triggerObject.offset().left - calendar.outerWidth() + 'px',
+                        top: triggerObject.offset().top + (0.5 * triggerObject.outerHeight()) - (0.5 * calendar.outerHeight()) + 'px',
                         display: 'block'
                     });
                     break;
@@ -177,8 +177,8 @@
                 case 'n':
                     calendar.css({
                         position: 'absolute',
-                        left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
-                        top: trigger.offset().top - calendar.outerHeight() + 'px',
+                        left: triggerObject.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * triggerObject.outerWidth()) + 'px',
+                        top: triggerObject.offset().top - calendar.outerHeight() + 'px',
                         display: 'block'
                     });
                     break;
@@ -186,8 +186,8 @@
                 case 's':
                     calendar.css({
                         position: 'absolute',
-                        left: trigger.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * trigger.outerWidth()) + 'px',
-                        top: trigger.offset().top + trigger.outerHeight() + 'px',
+                        left: triggerObject.offset().left - (0.5 * calendar.outerWidth()) + (0.5 * triggerObject.outerWidth()) + 'px',
+                        top: triggerObject.offset().top + triggerObject.outerHeight() + 'px',
                         display: 'block'
                     });
                     break;
@@ -397,8 +397,8 @@
         // When the calendar looses focus invoke the hideCalendarOnFocusOut handler which is defined above
         calendar.focusout(hideCalendarOnFocusOut);
 
-        // trigger stands for the calendar-button. Register the showCalendar event handler with the click event of this button
-        trigger.click(self.showCalendar);
+        // triggerObject stands for the calendar-button. Register the showCalendar event handler with the click event of this button
+        triggerObject.click(self.showCalendar);
     }
 
     return KarstelCalendar;
