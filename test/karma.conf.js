@@ -18,6 +18,7 @@ module.exports = function (config) {
             'tests/*.spec.js',
             '../bower_components/jquery/dist/jquery.min.js',
             '../bower_components/bootstrap/dist/js/bootstrap.min.js',
+            '../bower_components/bootstrap/dist/css/bootstrap.min.css',
             '../bower_components/moment/min/moment-with-locales.min.js',
             '../dist/karstelCalendar.min.js'
         ],
