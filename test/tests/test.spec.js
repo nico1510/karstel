@@ -93,12 +93,6 @@ describe("karstel calendar test suite", function () {
         expect($('#' + cal.id() + ' .popover-title').html()).to.be.equal(headerText);
     });
 
-    it('should change its header text', function () {
-        var headerText = 'testHeader';
-        cal.header(headerText);
-        expect($('#' + cal.id() + ' .popover-title').html()).to.be.equal(headerText);
-    });
-
     it('should have working dropdowns', function () {
         expect($('ul.dropdown-menu').first().is(":visible")).to.be.false;
         expect($('ul.dropdown-menu').last().is(":visible")).to.be.false;
