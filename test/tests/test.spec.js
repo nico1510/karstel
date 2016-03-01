@@ -3,7 +3,7 @@ describe("karstel calendar test suite", function () {
     var cal;
 
     before(function () {
-        $('body').append($('<input type="text" id="triggerElement"/>'));
+        $('body').append($('<input type="text" id="triggerElement" style=" position: fixed; top: 50%; left: 50%" />'));
         cal = new KarstelCalendar({triggerObject: $('#triggerElement')});
     });
 
@@ -96,12 +96,60 @@ describe("karstel calendar test suite", function () {
     it('should have working dropdowns', function () {
         expect($('ul.dropdown-menu').first().is(":visible")).to.be.false;
         expect($('ul.dropdown-menu').last().is(":visible")).to.be.false;
-        $('.btn, .btn-default, .dropdown-toggle').first().trigger('click');
-        expect($('ul.dropdown-menu').first().is(":visible")).to.be.true;
-        $('.btn, .btn-default, .dropdown-toggle').last().trigger('click');
-        expect($('ul.dropdown-menu').last().is(":visible")).to.be.true;
+
+        $('.year-dropdown > .btn').trigger('click');
+        expect($('.year-dropdown > ul.dropdown-menu').is(":visible")).to.be.true;
+        $('.month-dropdown > .btn').trigger('click');
+        expect($('.month-dropdown > ul.dropdown-menu').is(":visible")).to.be.true;
+    });
+
+    it('should change its start and end year', function () {
+        function testPair(startYear, endYear) {
+            cal.startYear(startYear);
+            cal.endYear(endYear);
+            var currentYear = startYear;
+            $('.year-dropdown > ul.dropdown-menu >> a').each(function (index, value) {
+                currentYear = startYear + index;
+                expect(parseInt($(value).html())).to.be.equal(currentYear);
+            });
+        }
+
+        testPair(2001, 2001);
+        testPair(2000, 2020);
+        testPair(1900, 2100);
+    });
+
+    it('should change its locale', function () {
+        var englishMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var englishWeekDays = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
+        var germanMonths = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+        var germanWeekDays = ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"];
+
+        // lowercase is intentional
+        var spanishMonths = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+        var spanishWeekDays = ["do", "lu", "ma", "mi", "ju", "vi", "sá"];
+
+        var japaneseMonths = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+        var japaneseWeekDays = ["日", "月", "火", "水", "木", "金", "土"];
+
+
+        function testLocale(locale, months, weekDays) {
+            cal.locale(locale);
+            $('.month-dropdown > ul.dropdown-menu >> a').each(function (index, value) {
+                expect(months).to.contain($(value).html());
+            });
+            $('.calendar-table > thead > tr > td').each(function (index, value) {
+                expect(weekDays).to.contain($(value).html());
+            });
+        }
+
+        testLocale('de', germanMonths, germanWeekDays);
+        testLocale('en', englishMonths, englishWeekDays);
+        testLocale('es', spanishMonths, spanishWeekDays);
+        testLocale('ja', japaneseMonths, japaneseWeekDays);
     });
 
 
-    //TODO: startYear endYear, daySelectCallback,
+    //TODO:  daySelectCallback
 });
