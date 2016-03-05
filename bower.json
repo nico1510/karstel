@@ -1,6 +1,6 @@
 {
   "name": "karstel",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://github.com/nico1510/karstel",
   "authors": [
     "nico1510 <Nicolas-Beck@gmx.de>"
@@ -23,7 +23,6 @@
     "node_modules",
     "bower_components",
     "test",
-    "karstelCalendar.js",
     "package.json",
     "README.md",
     "usage-example.html"
