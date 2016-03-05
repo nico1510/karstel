@@ -3,7 +3,7 @@
 ;(function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['jquery', '../bower_components/moment/moment', 'bootstrap'], factory);
+        define(['jquery', 'moment', 'bootstrap'], factory);
     } else {
         // Browser globals
         root.KarstelCalendar = factory(root.jQuery, root.moment);
