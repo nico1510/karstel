@@ -52,6 +52,25 @@ describe("karstel calendar test suite", function () {
         expect($('#' + cal.id()).is(":visible")).to.be.false;
     });
 
+    it('should show or hide itself after selecting a day based on the hideAfterSelect property', function () {
+        // first test the option where it stays visible
+        cal.hideAfterSelect(false);
+        expect($('#' + cal.id()).is(":visible")).to.be.false;
+        cal.showCalendar();
+        expect($('#' + cal.id()).is(":visible")).to.be.true;
+        $('.calendar-table > tbody >> td:eq(10)').trigger('click');
+        expect($('#' + cal.id()).is(":visible")).to.be.true;
+
+        // now test the option where the calendar hides after selecting a day
+        cal.hideCalendar();
+        cal.hideAfterSelect(true);
+        expect($('#' + cal.id()).is(":visible")).to.be.false;
+        cal.showCalendar();
+        expect($('#' + cal.id()).is(":visible")).to.be.true;
+        $('.calendar-table > tbody >> td:eq(10)').trigger('click');
+        expect($('#' + cal.id()).is(":visible")).to.be.false;
+    });
+
     it('should open when the triggerObject is clicked', function () {
         expect($('#' + cal.id()).is(":visible")).to.be.false;
         cal.triggerObject().trigger('click');
@@ -151,5 +170,47 @@ describe("karstel calendar test suite", function () {
     });
 
 
-    //TODO:  daySelectCallback
+    it('should have a working callback function', function (done) {
+        cal.startYear(1900);
+        cal.locale('en');
+
+        function testCallbackForSpecificDay(dayObject, done) {
+            cal.showCalendar();
+            var momentObject = moment(dayObject.year + '-' + dayObject.month + '-' + dayObject.day);
+
+            cal.daySelectCallback(function (day, ev) {
+                expect(this[0]).to.be.a('HTMLTableCellElement');
+                expect(ev.target === this[0]).to.be.true;
+                expect(day.isSame(momentObject, 'day')).to.be.true;
+                if (done) {
+                    done();
+                }
+            });
+            // click on year label in year dropdown
+            $('.year-dropdown > ul.dropdown-menu >> a').each(function (index, element) {
+                if ($(element).html() === String(dayObject.year)) {
+                    $(element).trigger('click');
+                }
+            });
+            // click on month in month dropdown
+            $('.month-dropdown > ul.dropdown-menu >> a:eq(' + String(dayObject.month - 1) + ')').trigger('click');
+
+            $('.calendar-table > tbody >> td').each(function (index, element) {
+                if ($(element).html() === String(dayObject.day) && $(element).css('color') !== 'rgb(220, 220, 220)') {
+                    $(element).trigger('click');
+                }
+            });
+        }
+
+        testCallbackForSpecificDay({'year': '1989', 'month': '10', 'day': '15'});
+        testCallbackForSpecificDay({'year': '1940', 'month': '01', 'day': '20'});
+        testCallbackForSpecificDay({'year': '1955', 'month': '03', 'day': '10'});
+        testCallbackForSpecificDay({'year': '1989', 'month': '02', 'day': '02'});
+        testCallbackForSpecificDay({'year': '1999', 'month': '04', 'day': '01'});
+        testCallbackForSpecificDay({'year': '1905', 'month': '11', 'day': '30'});
+        testCallbackForSpecificDay({'year': '2000', 'month': '08', 'day': '04'});
+        testCallbackForSpecificDay({'year': '2010', 'month': '12', 'day': '31'});
+        testCallbackForSpecificDay({'year': '2015', 'month': '09', 'day': '11'}, done);
+
+    });
 });
