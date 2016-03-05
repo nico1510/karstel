@@ -1,12 +1,12 @@
 {
   "name": "karstel",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/nico1510/karstel",
   "authors": [
     "nico1510 <Nicolas-Beck@gmx.de>"
   ],
   "description": "A simple javascript calender widget with bootstrap",
-  "main": "karstelCalendar.js",
+  "main": "dist/karstelCalendar.min.js",
   "moduleType": [
     "amd",
     "globals"
@@ -23,7 +23,11 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "karstelCalendar.js",
+    "package.json",
+    "README.md",
+    "usage-example.html"
+
   ],
   "dependencies": {
     "bootstrap": "~3.2.0",

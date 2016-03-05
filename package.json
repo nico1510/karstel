@@ -8,7 +8,7 @@
   "scripts": {
     "postinstall": "bower install",
     "test": "./node_modules/karma/bin/karma start ./test/karma.conf.js",
-    "build": "./node_modules/uglify-js/bin/uglifyjs karstelCalendar.js --output dist/karstelCalendar.min.js"
+    "build": "./node_modules/uglify-js/bin/uglifyjs dist/karstelCalendar.js --output dist/karstelCalendar.min.js"
   },
   "repository": {
     "type": "git",
