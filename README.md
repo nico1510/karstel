@@ -1,6 +1,9 @@
 [![Build Status](https://travis-ci.org/nico1510/karstel.svg?branch=master)](https://travis-ci.org/nico1510/karstel)
 
 # A simple javascript calendar widget with bootstrap
+## Installation
+run `bower install karstel`
+
 ## Dependencies
 + [moment.js](http://momentjs.com)
 + [bootstrap](http://getbootstrap.com)
